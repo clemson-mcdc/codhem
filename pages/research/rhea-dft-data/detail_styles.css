@@ -1,0 +1,286 @@
+/* =====================================================
+   DETAIL PAGES STYLING
+===================================================== */
+
+/* PAGE CONTAINER */
+.detail-page {
+    min-height: 0vh;
+    background-color: #0e1117;
+    padding: 2rem 2.5rem;
+}
+
+/* =====================================================
+   DASHBOARD TITLE & SUBTITLE
+===================================================== */
+.dashboard-title {
+    margin-bottom: 0.1rem !important;
+    margin-top: 3.7rem !important;
+    font-size: 2.8rem !important;
+    font-weight: 800 !important;
+    color: #FFFFFF !important;
+    font-family: 'Arial', sans-serif !important;
+    letter-spacing: -0.5px;
+    padding-top: 0 !important;
+    
+    /* Make it fixed */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1000 !important;
+    background-color: #0e1117 !important; 
+    padding: 0rem 3rem !important; 
+}
+
+.dashboard-subtitle {
+    font-size: 1.28rem;
+    color: #9ca3af;
+    margin-bottom: 3rem !important;
+    margin-top: 1rem !important;
+
+    position: fixed !important;
+    top: 5rem !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 900 !important;
+    background-color: #0e1117 !important; /* Match your page background */
+    padding:1.2rem 6.4rem !important; /* Add padding */
+}
+
+/* =====================================================
+   PAGE SPECIFIC TITLE
+===================================================== */
+.custom-title {
+    color: #FFFFFF !important;
+    font-size: 2.2rem !important;
+    font-weight: 700 !important;
+    font-family: 'Arial', sans-serif !important;
+    margin-bottom: 3rem !important;
+    padding: 1.2rem 1.8rem !important;
+    background: linear-gradient(135deg, #2a2f3a, #1a1f2e) !important;
+    border-radius: 10px !important;
+    border-left: 4px solid #20BF65 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+/* =====================================================
+   DATAFRAME STYLING
+===================================================== */
+[data-testid="stDataFrame"] {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    border: 2px solid #2a2f3a !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
+    background-color: #161b22 !important;
+    margin-top: 2rem !important;
+    height: 25rem !important;
+}
+
+/* DataFrame header */
+[data-testid="stDataFrame"] thead th {
+    background: linear-gradient(145deg, #1a1f2e, #141826) !important;
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-family: 'Arial', sans-serif !important;
+    font-size: 15px !important;
+    border-bottom: 3px solid #4273CE !important;
+    padding: 16px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.8px !important;
+}
+
+/* DataFrame cells */
+[data-testid="stDataFrame"] tbody td {
+    background-color: #161b22 !important;
+    color: #E0E0E0 !important;
+    font-family: 'Arial', sans-serif !important;
+    font-size: 14px !important;
+    border-bottom: 1px solid #2a2f3a !important;
+    padding: 14px 20px !important;
+}
+
+/* Alternating row colors */
+[data-testid="stDataFrame"] tbody tr:nth-child(even) td {
+    background-color: #1a1f2e !important;
+}
+
+/* Hover effect */
+[data-testid="stDataFrame"] tbody tr:hover td {
+    background-color: #2a2f3a !important;
+    color: #FFFFFF !important;
+}
+
+/* =====================================================
+   DATAFRAME OPTIONS MENU STYLING - NEW SECTION
+===================================================== */
+
+/* Options button (three dots) */
+[aria-label="More options"] {
+    background-color: #4273CE !important; /* Blue background */
+    color: #FFFFFF !important; /* White text */
+    border: 1px solid #5f5f63 !important;
+    border-radius: 4px !important;
+    padding: 6px 10px !important;
+}
+
+[aria-label="More options"]:hover {
+    background-color: #3157a8 !important;
+}
+
+/* Options toolbar container */
+[data-testid="stElementToolbar"] {
+    background-color: #1a1f2e !important;
+    border: 1px solid #2a2f3a !important;
+    border-radius: 6px !important;
+    padding: 4px !important;
+}
+
+/* Options menu dropdown */
+div[role="menu"],
+div[data-baseweb="popover"] {
+    background-color: #1a1f2e !important;
+    border: 1px solid #2a2f3a !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    z-index: 10000 !important; /* Ensure it's above fixed headers */
+}
+
+/* Menu items */
+div[role="menuitem"],
+div[data-baseweb="menu-item"] {
+    color: #E0E0E0 !important;
+    background-color: #1a1f2e !important;
+    padding: 10px 16px !important;
+    border-bottom: 1px solid #2a2f3a !important;
+}
+
+div[role="menuitem"]:hover,
+div[data-baseweb="menu-item"]:hover {
+    background-color: #2a2f3a !important;
+    color: #FFFFFF !important;
+}
+
+/* Search box */
+input[type="search"],
+input[placeholder*="Search"] {
+    background-color: #1a1f2e !important;
+    color: #FFFFFF !important;
+    border: 1px solid #2a2f3a !important;
+    border-radius: 4px !important;
+    padding: 6px 10px !important;
+}
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.detail-page {
+    animation: fadeIn 0.5s ease-out;
+}
+
+.dashboard-title {
+    animation: fadeIn 0.6s ease-out 0.1s both;
+}
+
+.dashboard-subtitle {
+    animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.custom-title {
+    animation: fadeIn 0.6s ease-out 0.3s both;
+}
+
+.detail-page button {
+    animation: fadeIn 0.6s ease-out 0.4s both;
+}
+
+[data-testid="stDataFrame"] {
+    animation: fadeIn 0.6s ease-out 0.5s both;
+}
+
+/* =====================================================
+   RESPONSIVE DESIGN
+===================================================== */
+@media (max-width: 768px) {
+    .detail-page {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    .dashboard-title {
+        font-size: 2rem !important;
+        padding: 1rem 1.5rem !important;
+    }
+    
+    .dashboard-subtitle {
+        font-size: 1.1rem !important;
+        padding: 0.6rem 1.5rem !important;
+    }
+    
+    .custom-title {
+        font-size: 1.8rem !important;
+        padding: 1rem 1.5rem !important;
+    }
+    
+    .detail-page button {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+    
+    [data-testid="stDataFrame"] thead th {
+        padding: 12px 16px !important;
+        font-size: 13px !important;
+    }
+    
+    [data-testid="stDataFrame"] tbody td {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* =====================================================
+   NUCLEAR OPTION FOR BUTTON STYLING
+===================================================== */
+/* =====================================================
+   BUTTON STYLING - BLUE (ALL BUTTONS)
+===================================================== */
+button.stButton,
+button[data-testid="baseButton-secondary"],
+button[kind="secondary"],
+.stButton > button {
+    background: linear-gradient(145deg, #4273CE, #3157a8) !important;
+    color: #FFFFFF !important;
+    font-size: 30px !important;
+    font-weight: 600 !important;
+    font-family: 'Arial', sans-serif !important;
+    padding: 12px 28px !important;
+    border-radius: 10px !important;
+    border: 2px solid rgba(66, 115, 206, 0.5) !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(66, 115, 206, 0.3) !important;
+    margin-bottom: 0rem !important;
+    align-self: center !important;
+    align-items: center !important;
+    align-content: center !important;
+    margin-left: 12rem !important;
+}
+
+button.stButton:hover,
+button[data-testid="baseButton-secondary"]:hover,
+button[kind="secondary"]:hover,
+.stButton > button:hover {
+    background: linear-gradient(145deg, #3157a8, #4273CE) !important;
+    transform: translateX(-8px) !important;
+    box-shadow: 0 6px 25px rgba(66, 115, 206, 0.5) !important;
+    border-color: #4273CE !important;
+}
+
+
+/* =====================================================
+   DISABLE MAIN CSS FOR PERIODIC TABLE SECTION
+   Add this to the END of your main styles.css file
+===================================================== */

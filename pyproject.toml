@@ -1,0 +1,13 @@
+[project]
+name = "codhem"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "authlib>=1.7.0",
+    "plotly>=6.7.0",
+    "pymongo>=4.17.0",
+    "scipy>=1.17.1",
+    "streamlit>=1.56.0",
+]

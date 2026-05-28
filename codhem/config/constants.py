@@ -1,0 +1,3 @@
+DEFAULT_DATASET_LIMIT = 100
+DEFAULT_MODEL_NAME = "signal_estimator"
+DEFAULT_PAGE_TITLE = "codhem"

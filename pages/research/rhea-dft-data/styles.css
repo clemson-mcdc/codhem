@@ -1,0 +1,1898 @@
+/* =====================================================
+   CLEAN DASHBOARD CSS - NON-CONFLICTING VERSION
+   Preserves all your original styling without nuclear options
+===================================================== */
+
+/* =====================================================
+   1. GLOBAL LAYOUT - Safe modifications
+===================================================== */
+.main .block-container {
+  max-width: 1600px;
+  padding: 2rem 3rem 3rem 3rem;
+}
+
+/* =====================================================
+   2. HEADER - Clean version
+===================================================== */
+/* Main title */
+h1 {
+  margin-bottom: 0.1rem;
+  margin-top: 0.5rem;
+  font-size: 2.8rem;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: "Arial", sans-serif;
+  letter-spacing: -0.5px;
+  padding-top: 0;
+}
+
+/* Subtitle - Removed fixed positioning for safety */
+.subtitle {
+  font-size: 1.28rem;
+  color: #9ca3af;
+  margin-bottom: 3rem;
+  margin-top: 0.5rem;
+}
+
+/* =====================================================
+   3. METRIC CARDS - Preserve your styling
+===================================================== */
+.metric-row {
+  margin-bottom: -3rem;
+}
+
+.metric-card-wrapper {
+  position: relative;
+  margin-bottom: -2rem;
+  margin-left: 0rem;
+}
+
+.custom-metric {
+  background: linear-gradient(145deg, #232735, #4c3a3a);
+  padding: clamp(0.6rem, 1vw, 1rem) clamp(1rem, 2vw, 1.8rem) clamp(3rem, 5vw, 3.8rem) clamp(1rem, 1.8vw, 1.6rem);
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  transition: all 0.25s ease;
+  min-height: 125px;
+  border: 1px solid #5f5f63;
+  position: relative; /* Make it relative for absolute children */
+  overflow: hidden; /* prevent overflow issues */
+}
+
+.custom-metric:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65);
+  box-shadow:
+    4px 4px 8px #0f111a,
+    -4px -4px 8px #252933;
+}
+
+.metric-label {
+  font-size: clamp(18px, 1.7vw, 28px);
+  font-weight: 700;
+  color: #fbf8f8;
+  margin-bottom: 0px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.metric-value {
+  font-size: clamp(24px, 3.4vw, 50px);
+  font-weight: 900;
+  color: #ffffffb9;
+  position: absolute; /* absolute positioning inside card */
+  bottom: clamp(0.2rem, 0.5vw, 0.5rem);
+  right: clamp(0.9rem, 1.5vw, 1.25rem);
+  text-align: right;
+  line-height: 1;
+}
+
+.metric-button-container {
+  position: absolute;
+  bottom: clamp(3.1rem, 4.3vw, 5rem);
+  left: clamp(10rem, 14vw, 20rem);
+  right: 0;
+  text-align: center;
+  z-index: 20;
+}
+
+.metric-button-container .stPageLink {
+  margin: 0;
+  display: inline-block;
+}
+
+/* =====================================================
+   4. STREAMLIT PAGE LINK - Clean version
+===================================================== */
+.stPageLink {
+  margin-top: 6px;
+  display: block;
+  margin-left: 0rem;
+}
+
+.stPageLink a {
+  display: inline-block;
+  padding: clamp(0.2rem, 0.45vw, 0.3rem) clamp(0.45rem, 0.7vw, 0.5rem) clamp(0.2rem, 0.45vw, 0.3rem) clamp(0.65rem, 0.9vw, 0.75rem);
+  border-radius: 10px;
+  background-color: rgba(51, 101, 194, 0.488);
+  border: 1px solid #4273ce;
+  color: #ffffff;
+  font-size: clamp(14px, 1vw, 18px);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  font-family: "Arial", sans-serif;
+  min-width: clamp(96px, 8vw, 120px);
+  max-width: clamp(96px, 8vw, 120px);
+  text-align: center;
+  white-space: nowrap;
+  box-sizing: border-box;
+  margin-left: clamp(0.9rem, 1.4vw, 1.5rem);
+  margin-top: clamp(-1.6rem, -1.6vw, -1rem);
+}
+
+.stPageLink a:hover {
+  background-color: #4273ce;
+  transform: translateX(4px);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+@media (max-width: 1200px) {
+  .custom-metric {
+    min-height: 112px;
+  }
+
+  .metric-button-container {
+    bottom: 3.25rem;
+    left: 9.5rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .custom-metric {
+    min-height: 104px;
+  }
+
+  .metric-button-container {
+    bottom: 3rem;
+    left: 8rem;
+  }
+}
+
+/* =====================================================
+   5. CHART CONTAINERS - Clean version
+===================================================== */
+.plot-container {
+  background-color: #262e40;
+  padding: 3rem;
+  border-radius: 12px;
+}
+
+.plots-row {
+  margin-top: 2rem;
+}
+
+.chart-card {
+  padding: 0rem;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card h3 {
+  margin-bottom: 8px;
+  line-height: 1.2;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  color: #ffffff;
+  font-family: "Arial", sans-serif;
+  margin-top: 20px;
+}
+
+/* Ensure proper plot sizing */
+.js-plotly-plot {
+  width: 100%;
+  height: 100%;
+}
+
+/* =====================================================
+   DROPDOWN MENU OPEN ANIMATION
+===================================================== */
+
+/* =====================================================
+   6. DROPDOWN STYLING — GLOBAL DEFAULTS
+===================================================== */
+
+/* Labels */
+div[data-testid="stSelectbox"] > label p,
+div[data-testid="stMultiSelect"] > label p {
+  color: #ffffff;
+  font-weight: 600;
+  font-family: "Arial", "Helvetica", sans-serif;
+}
+
+/* Main dropdown container - BASE STYLE */
+div[data-baseweb="select"] > div:first-child {
+  border-radius: 12px;
+  background: linear-gradient(145deg, #232735, #4c3a3a);
+
+  position: relative;
+  overflow: hidden;
+  z-index: 100; /* Added for proper stacking */
+  box-shadow:
+    4px 4px 8px #0f111a,
+    -4px -4px 8px #252933;
+  border: 2px solid #5f5f63;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 3D Hover Effect */
+div[data-baseweb="select"] > div:first-child:hover {
+  border-color: #4273ce;
+  box-shadow:
+    6px 6px 12px #0f111a,
+    -6px -6px 12px #252933;
+  transform: translateY(-2px);
+}
+
+/* Text inside dropdown - DEFAULT (for multiselect) */
+div[data-baseweb="select"] > div:first-child > div {
+  color: #ffd6cc !important;
+  font-weight: 500;
+  font-family: "Arial", sans-serif;
+  transition: color 0.2s ease;
+  text-align: center;
+}
+
+/* Arrow styling */
+div[data-baseweb="select"] svg {
+  fill: #ffffff;
+}
+
+/* =====================================================
+   FIXED POPOVER STYLING - No animations/transforms
+===================================================== */
+
+/* CRITICAL FIX: Remove any transforms/animations from popover */
+div[data-baseweb="popover"] {
+  border: 2px solid #5f5f63 !important;
+  border-radius: 12px !important;
+  background-color: #1a1d29 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  margin-top: 4px !important;
+  z-index: 10000 !important; /* Higher z-index */
+  /* REMOVED: animation: slideDown 0.2s ease-out; */
+  /* REMOVED: transform properties */
+  position: fixed !important; /* Changed from default */
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+}
+
+/* Popover content container */
+div[data-baseweb="popover"] > div {
+  background-color: #1a1d29 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Menu inside popover */
+div[data-baseweb="popover"] div[data-baseweb="menu"] {
+  background-color: #1a1d29 !important;
+  padding: 4px !important;
+  max-height: 400px !important;
+  overflow-y: auto !important;
+}
+
+/* Options */
+div[data-baseweb="menu"] li {
+  background-color: #1a1d29;
+  color: #ffffff;
+  font-weight: 500;
+  margin: 2px 4px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+div[data-baseweb="menu"] li:hover {
+  background-color: #3a2a2a;
+}
+
+div[data-baseweb="menu"] li[aria-selected="true"] {
+  background-color: #4273ce;
+  font-weight: 600;
+}
+
+/* =====================================================
+   MULTISELECT SPECIFIC FIXES
+===================================================== */
+
+/* Multi-select selected items container */
+div[data-baseweb="select"] div[role="listbox"] div {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 4px !important;
+}
+
+/* Multi-select tag styling */
+div[data-baseweb="tag"] {
+  background-color: #4273ce !important;
+  color: white !important;
+  border-radius: 6px !important;
+  margin: 2px !important;
+}
+
+/* =====================================================
+   REMOVE ALL ANIMATIONS/TRANSFORMS that might interfere
+===================================================== */
+
+/* Remove any problematic keyframe animations */
+@keyframes safeFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Safe fade for dropdown content */
+div[role="listbox"] {
+  animation: safeFadeIn 0.15s ease-out;
+}
+
+/* =====================================================
+   MULTISELECT PILL CUSTOM STYLING - DROPDOWN 2 BLOCKS
+===================================================== */
+
+div[data-testid="stMultiSelect"] [data-baseweb="tag"] {
+  background-color: rgba(255, 99, 71, 0.18) !important; /* tomato */
+  border: 1px solid rgba(255, 99, 71, 0.45) !important;
+  color: #ffd6cc !important;
+  border-radius: 8px !important;
+}
+
+/* Selectbox + Multiselect labels */
+div[data-testid="stSelectbox"] > label p,
+div[data-testid="stMultiSelect"] > label p {
+  color: #ffffff;
+  font-weight: 600;
+  font-family: "Arial", "Helvetica", sans-serif;
+}
+
+/* =====================================================
+   7. COLUMN LAYOUT HELPERS
+===================================================== */
+/* Ensure consistent column heights */
+.stColumn > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chart-card .stPlotlyChart {
+  flex: 1;
+  min-height: 0;
+}
+
+/* =====================================================
+   CENTER COLUMN CONTAINER STYLING
+   ===================================================== */
+/* =====================================================
+   CENTER COLUMN (70% width) CONTAINER STYLING
+   ===================================================== */
+
+/* =====================================================
+   PERIODIC TABLE WRAPPER STYLING
+   ===================================================== */
+
+.periodic-table-wrapper {
+  /* Container styling */
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+  padding: 24px !important;
+  margin: 16px 0 !important;
+  border: 1px solid rgba(106, 13, 173, 0.2) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+
+  /* Animation */
+  transition: all 0.3s ease !important;
+}
+
+.periodic-table-wrapper:hover {
+  box-shadow:
+    0 12px 48px rgba(106, 13, 173, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(106, 13, 173, 0.3) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* =====================================================
+   PERIODIC TABLE BUTTONS – ACTUAL WORKING TARGET
+   ===================================================== */
+
+/* Base button surface */
+div[data-testid="stForm"] div[data-testid="stColumn"] button > div {
+  /* Square shape */
+  aspect-ratio: 1 / 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Visuals */
+  background-color: #6a0dad;
+  color: white !important;
+  font-weight: 600;
+  font-size: clamp(0.45rem, 0.72vw, 1rem);
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  box-sizing: border-box;
+
+  border-radius: 8px;
+
+  /* 3D look */
+  box-shadow:
+    0 4px 0 #4b087a,
+    0 6px 14px rgba(0, 0, 0, 0.35);
+
+  /* Remove inner gaps */
+  padding: 0.08rem;
+  margin: 0;
+
+  /* Animation */
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+/* Hover effect */
+div[data-testid="stForm"] div[data-testid="stColumn"] button:hover > div {
+  transform: scale(1.08);
+  box-shadow:
+    0 6px 0 #4b087a,
+    0 10px 20px rgba(0, 0, 0, 0.45);
+}
+
+/* Selected (PRIMARY) button — stays larger */
+div[data-testid="stForm"]
+  div[data-testid="stColumn"]
+  button[data-testid="baseButton-primary"]
+  > div {
+  transform: scale(1.15);
+  background-color: #7b1fd6 !important;
+
+  /* Pressed-in look */
+  box-shadow:
+    0 2px 0 #3a065f,
+    0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Click feedback */
+div[data-testid="stForm"] div[data-testid="stColumn"] button:active > div {
+  transform: scale(1.05);
+  box-shadow:
+    0 1px 0 #3a065f,
+    0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* =====================================================
+   REMOVE STREAMLIT BUTTON SHELL (GREY RECTANGLE)
+   ===================================================== */
+
+/* Remove outer wrapper styling */
+div[data-testid="stForm"]
+  div[data-testid="stColumn"]
+  div[data-testid="stButton"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Reset actual button element */
+div[data-testid="stForm"] div[data-testid="stColumn"] button {
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: unset !important;
+  min-width: unset !important;
+  width: 100% !important;
+
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+@media (max-width: 1400px) {
+  div[data-testid="stForm"] div[data-testid="stColumn"] button > div {
+    font-size: clamp(0.42rem, 0.68vw, 0.88rem);
+  }
+}
+
+@media (max-width: 1100px) {
+  div[data-testid="stForm"] div[data-testid="stColumn"] button > div {
+    font-size: clamp(0.38rem, 0.62vw, 0.76rem);
+    border-radius: 6px;
+    padding: 0.04rem;
+  }
+}
+
+/* =====================================================
+   PERIODIC TABLE – FADED ELEMENTS (NOT IN DATABASE)
+   ===================================================== */
+
+/* Faded Alkali metals */
+div[class*="st-key-pt_btn_faded_alkali"] button > div {
+  background-color: #da1d19 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #e86969,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important; /* Softer outer shadow */
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Alkaline earth metals */
+div[class*="st-key-pt_btn_faded_alkaline-earth"] button > div {
+  background-color: #d17300 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #ddcea3,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Transition metals */
+div[class*="st-key-pt_btn_faded_transition"] button > div {
+  background-color: #8e24aa !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #be7dd4,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Post-transition metals */
+div[class*="st-key-pt_btn_faded_post-transition"] button > div {
+  background-color: #3949ab !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #797edf,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Metalloids */
+div[class*="st-key-pt_btn_faded_metalloid"] button > div {
+  background-color: #00897b !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #75c7bf,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Reactive nonmetals */
+div[class*="st-key-pt_btn_faded_nonmetal"] button > div {
+  background-color: #43a047 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #95e67c,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Noble gases */
+div[class*="st-key-pt_btn_faded_noble"] button > div {
+  background-color: #1e88e5 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #7fc8ea,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Lanthanides */
+div[class*="st-key-pt_btn_faded_lanthanide"] button > div {
+  background-color: #6d4c41 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #f6ac87,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Actinides */
+div[class*="st-key-pt_btn_faded_actinide"] button > div {
+  background-color: #5e35b1 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #b192ed,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Faded Unknown */
+div[class*="st-key-pt_btn_faded_unknown"] button > div {
+  background-color: #757575 !important;
+  opacity: 0.5 !important;
+  filter: grayscale(30%) !important;
+  box-shadow:
+    0 2px 0 #fefefe,
+    /* Lighter 3D shadow */ 0 3px 7px rgba(0, 0, 0, 0.25) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* =====================================================
+   PERIODIC TABLE – CATEGORY COLORS (REGULAR - IN DATABASE)
+   ===================================================== */
+
+/* Alkali metals */
+div[class*="st-key-pt_btn_alkali"]:not([class*="faded"]) button > div {
+  background-color: #da1d19 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #e86969,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important; /* outer shadow */
+  color: white !important;
+}
+
+/* Alkaline earth metals */
+div[class*="st-key-pt_btn_alkaline-earth"]:not([class*="faded"]) button > div {
+  background-color: #d17300 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #ddcea3,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Transition metals */
+div[class*="st-key-pt_btn_transition"]:not([class*="faded"]) button > div {
+  background-color: #8e24aa !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #be7dd4,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Post-transition metals */
+div[class*="st-key-pt_btn_post-transition"]:not([class*="faded"]) button > div {
+  background-color: #3949ab !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #797edf,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Metalloids */
+div[class*="st-key-pt_btn_metalloid"]:not([class*="faded"]) button > div {
+  background-color: #00897b !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #75c7bf,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Reactive nonmetals */
+div[class*="st-key-pt_btn_nonmetal"]:not([class*="faded"]) button > div {
+  background-color: #43a047 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #95e67c,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Noble gases */
+div[class*="st-key-pt_btn_noble"]:not([class*="faded"]) button > div {
+  background-color: #1e88e5 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #7fc8ea,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Lanthanides */
+div[class*="st-key-pt_btn_lanthanide"]:not([class*="faded"]) button > div {
+  background-color: #6d4c41 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #f6ac87,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Actinides */
+div[class*="st-key-pt_btn_actinide"]:not([class*="faded"]) button > div {
+  background-color: #5e35b1 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #b192ed,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* Unknown */
+div[class*="st-key-pt_btn_unknown"]:not([class*="faded"]) button > div {
+  background-color: #757575 !important;
+  opacity: 1 !important;
+  filter: grayscale(0%) !important;
+  box-shadow:
+    0 4px 0 #fefefe,
+    /* 3D shadow */ 0 6px 14px rgba(0, 0, 0, 0.35) !important;
+  color: white !important;
+}
+
+/* =====================================================
+   PERIODIC TABLE – SELECTED ELEMENTS (REGULAR - IN DATABASE)
+   ===================================================== */
+
+/* This section remains the same as before for selected elements */
+
+/* Outer center column with blue background and red border */
+.outer-center {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(145deg, #232735, #4c3a3a);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+  border: 1px solid #5f5f63;
+  transition: all 0.25s ease;
+  border-radius: 16px;
+  min-height: 100px;
+  height: auto;
+  padding: 12px 18px;
+  box-sizing: border-box;
+}
+
+.outer-center:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65);
+  box-shadow:
+    4px 4px 8px #0f111a,
+    -4px -4px 8px #252933;
+}
+
+/* Left inner column */
+.outer-center .inner-left {
+  flex: 0 0 clamp(150px, 20%, 220px);
+  font-weight: 700;
+  font-size: clamp(18px, 1.7vw, 23px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  padding-right: 10px;
+  box-sizing: border-box;
+  line-height: 1.2;
+}
+
+.outer-center .inner-right {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: clamp(16px, 1.6vw, 22px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  max-height: 140px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  text-align: center;
+  line-height: 1.35;
+}
+
+@media (max-width: 1100px) {
+  .outer-center {
+    gap: 8px;
+    padding: 10px 14px;
+  }
+
+  .outer-center .inner-left {
+    flex-basis: clamp(130px, 24%, 180px);
+  }
+
+  .outer-center .inner-right {
+    min-height: 68px;
+    max-height: 132px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 760px) {
+  .outer-center {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .outer-center .inner-left {
+    flex: 0 0 auto;
+    justify-content: center;
+    text-align: center;
+    padding-right: 0;
+  }
+
+  .outer-center .inner-right {
+    max-height: none;
+    min-height: 0;
+    width: 100%;
+  }
+}
+
+/* =====================================================
+   CLEAR ALL SELECTIONS BUTTON
+===================================================== */
+/* Force Streamlit block to full width */
+div[data-testid="stVerticalBlock"] > div:has(.st-key-clear_periodic) {
+  display: flex;
+  justify-content: center;
+}
+
+div.st-key-clear_periodic {
+  text-align: center;
+}
+
+div.st-key-clear_periodic {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+}
+div.st-key-clear_periodic button {
+  all: unset;
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 10px;
+  background-color: rgba(51, 101, 194, 0.488);
+  border: 1px solid #4273ce;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Arial", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 20px;
+}
+
+/* Hover */
+div.st-key-clear_periodic button:hover {
+  background-color: #4273ce;
+  transform: translateY(4px);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* =====================================================
+   DETAILED ANALYSIS BUTTON — MATCH stPageLink
+===================================================== */
+
+div.st-key-detailed_analysis button {
+  all: unset; /* remove Streamlit defaults */
+  display: inline-block;
+  padding: 4px 15px;
+  border-radius: 10px;
+  background-color: rgba(66, 115, 206, 0.18);
+  border: 1px solid #4273ce;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Arial", sans-serif;
+  min-width: 120px;
+  max-width: 120px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover effect */
+div.st-key-detailed_analysis button:hover {
+  background-color: #4273ce;
+  transform: translateX(4px);
+  color: #ffffff;
+}
+
+/* Center it */
+div.st-key-detailed_analysis {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+/* =====================================================
+   FILTERED ALLOYS HEADER + COUNT BADGE
+   ===================================================== */
+
+.filtered-alloys-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start; /* aligns title to the left, change if needed */
+  width: 100%;
+
+  padding: 4px 8px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.filtered-alloys-title {
+  font-family: "Arial", sans-serif;
+  font-size: clamp(18px, 1.6vw, 25px);
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px; /* space between title and count */
+}
+
+.filtered-alloys-count {
+  all: unset;
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 10px;
+  background-color: #4273ce;
+  border: 1px solid #4273ce;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Arial", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+/* Hover effect */
+.filtered-alloys-count:hover {
+  transform: translateX(4px);
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* =====================================================
+   COMMON DASHBOARD BUTTON BASE
+===================================================== */
+
+.st-key-btn_details button,
+.st-key-btn_csv button,
+.st-key-btn_zip button {
+  min-height: 44px;
+  height: auto;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: clamp(14px, 1vw, 17px);
+  font-weight: 600;
+  font-family: "Arial", sans-serif;
+
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
+  padding: 10px 12px;
+  word-break: break-word;
+  box-sizing: border-box;
+}
+
+.st-key-btn_details {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.st-key-btn_details button {
+  background-color: #4273ce;
+  border: 1px solid #4273ce;
+  color: #ffffff;
+}
+
+.st-key-btn_details button:hover {
+  background-color: #365fc2;
+  transform: translateY(-2px);
+}
+
+.st-key-btn_csv {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.st-key-btn_csv button {
+  background-color: #059669;
+  border: 1px solid #059669;
+  color: #ffffff;
+}
+
+.st-key-btn_csv button:hover {
+  background-color: #047857;
+  transform: translateY(-2px);
+}
+
+.st-key-btn_zip {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.st-key-btn_zip button {
+  background-color: #4273ce;
+  border: 1px solid #4273ce;
+  color: #ffffff;
+}
+
+.st-key-btn_zip button:hover {
+  background-color: #365fc2;
+  transform: translateY(-2px);
+}
+
+div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
+  width: 100%;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) > div[data-testid="column"] {
+  min-width: 0;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) > div[data-testid="column"]:first-child {
+  flex: 1 1 42%;
+}
+
+div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) > div[data-testid="column"]:not(:first-child) {
+  flex: 1 1 calc((58% - 24px) / 3);
+}
+
+@media (max-width: 1100px) {
+  div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) > div[data-testid="column"]:first-child {
+    flex: 1 1 100%;
+  }
+
+  div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) > div[data-testid="column"]:not(:first-child) {
+    flex: 1 1 calc((100% - 24px) / 3);
+  }
+}
+
+@media (max-width: 760px) {
+  div[data-testid="stHorizontalBlock"]:has(.st-key-btn_details):has(.st-key-btn_csv):has(.st-key-btn_zip) > div[data-testid="column"] {
+    flex: 1 1 100% !important;
+  }
+
+  .filtered-alloys-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .filtered-alloys-title {
+    gap: 8px;
+  }
+}
+
+/* =====================================================
+   8. FOOTER
+===================================================== */
+footer {
+  margin-top: 3rem;
+  color: #9ca3af;
+}
+
+/* Add to prevent footer overlap */
+.stApp {
+  padding-bottom: 50px !important;
+}
+
+/* Ensure proper spacing for all containers */
+.main .block-container {
+  padding-bottom: 50px !important;
+}
+
+/* ===================================================== */
+/* DETAILS PAGE STYLES (Won't interfere with main page) */
+/* ===================================================== */
+
+/* Details page wrapper */
+.details-page-wrapper {
+  padding: 0 1rem;
+}
+
+/* Details page header */
+.details-page-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.details-page-header h2 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.details-page-header p {
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+/* Filtered metrics container */
+.filtered-metrics-container {
+  margin-bottom: 2.5rem;
+}
+
+.filtered-metrics-container h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+/* Scrollable metrics container */
+.scrollable-metrics-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Custom scrollbar for the metrics container */
+.scrollable-metrics-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-metrics-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.scrollable-metrics-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.scrollable-metrics-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Filtered metric card */
+.filtered-metric-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 0.5rem;
+}
+
+.filtered-metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #e3e8f0 0%, #b0bcd8 100%);
+}
+
+.filtered-metric-title {
+  font-size: 0.9rem;
+  color: #34495e;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.filtered-metric-value {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.filtered-metric-subtitle {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Spacing between metric rows */
+.metric-row-spacing {
+  height: 1.2rem;
+}
+
+/* Details statistics section */
+.details-stats-section {
+  margin: 2.5rem 0;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.details-stats-section h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+}
+
+/* ===================================================== */
+/* DATASET STATISTICS — MATCH ALLOY CARD STYLE          */
+/* ===================================================== */
+
+.details-stat-card {
+  background: linear-gradient(145deg, #232735, #4c3a3a);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  border: 1px solid #4c4d52;
+  text-align: center;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.details-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    4px 4px 8px #0f111a,
+    -4px -4px 8px #252933;
+}
+
+/* Label = like alloy title */
+.details-stat-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fbf8f8;
+  margin-bottom: 10px;
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* Value = like alloy number */
+.details-stat-value {
+  font-size: clamp(20px, 4vw, 42px);
+  font-weight: 900;
+  color: #ffffffc0;
+  margin: 5px 0;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+/* Details dataframe section */
+.details-dataframe-section {
+  margin: 2.5rem 0;
+}
+
+.details-dataframe-section h3 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+/* Back button */
+.details-back-btn {
+  text-align: center;
+  margin: 2.5rem 0 1rem 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.details-back-link {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 25px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.details-back-link:hover {
+  background: linear-gradient(135deg, #5a0cb9 0%, #1c65e8 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+}
+
+/* ===================================================== */
+/* ALLOY COMPOSITION SCROLLABLE GRID STYLES             */
+/* ===================================================== */
+
+/* Vertical scrolling container with grid layout */
+.alloy-scroll-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 equal columns */
+  gap: 15px;
+  max-height: 250px; /* Fixed height for scrolling */
+  overflow-y: auto;
+  padding: 20px;
+  margin: 15px 0;
+
+  scrollbar-width: thin;
+  position: relative;
+}
+
+/* Scrollbar styling for WebKit browsers */
+.alloy-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.alloy-scroll-container::-webkit-scrollbar-track {
+  background: #2a2c34;
+  border-radius: 10px;
+}
+
+.alloy-scroll-container::-webkit-scrollbar-thumb {
+  background: #4a4c54;
+  border-radius: 10px;
+}
+
+.alloy-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #5a5c64;
+}
+
+/* Alloy cards for grid - Matching your custom-metric style */
+.alloy-scroll-card {
+  background: linear-gradient(145deg, #232735, #4c3a3a);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  border: 1px solid #4c4d52;
+  text-align: center;
+  transition: all 0.3s ease;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.alloy-scroll-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65);
+  box-shadow:
+    4px 4px 8px #0f111a,
+    -4px -4px 8px #252933;
+}
+
+/* Card title */
+.alloy-scroll-card-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fbf8f8;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+  text-align: left;
+}
+
+/* Card value - Matching your metric-value style */
+.alloy-scroll-card-value {
+  font-size: clamp(20px, 4vw, 42px);
+  font-weight: 900;
+  color: #ffffffc0;
+  margin: 5px 0;
+  line-height: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Card subtitle */
+.alloy-scroll-card-subtitle {
+  font-size: 0.8em;
+  color: #b0b0b0;
+  margin-top: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+/* Hint text for scrolling */
+.alloy-scroll-hint {
+  font-size: 0.85em;
+  color: #a0a0a0;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 15px;
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .alloy-scroll-container {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 18px;
+    gap: 12px;
+  }
+
+  .alloy-scroll-card {
+    min-height: 110px;
+    padding: 12px;
+  }
+
+  .alloy-scroll-card-value {
+    font-size: clamp(26px, 3.5vw, 38px);
+  }
+}
+
+@media (max-width: 900px) {
+  .alloy-scroll-container {
+    grid-template-columns: repeat(2, 1fr);
+    max-height: 350px;
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .alloy-scroll-card {
+    min-height: 100px;
+  }
+
+  .alloy-scroll-card-value {
+    font-size: clamp(24px, 3vw, 34px);
+  }
+}
+
+@media (max-width: 600px) {
+  .alloy-scroll-container {
+    grid-template-columns: 1fr;
+    max-height: 300px;
+    padding: 12px;
+  }
+
+  .alloy-scroll-card {
+    min-height: 90px;
+    padding: 10px;
+  }
+
+  .alloy-scroll-card-title {
+    font-size: 0.9em;
+  }
+
+  .alloy-scroll-card-value {
+    font-size: clamp(22px, 2.5vw, 30px);
+  }
+
+  .alloy-scroll-card-subtitle {
+    font-size: 0.75em;
+  }
+}
+
+/* Dark theme adjustment for scroll container */
+.dark .alloy-scroll-container {
+  background: linear-gradient(145deg, #1e2028, #2e3038);
+  border-color: #4a4b50;
+}
+
+.dark .alloy-scroll-card {
+  background: linear-gradient(145deg, #252735, #2f3140);
+  border-color: #4e4f55;
+}
+
+/* Light theme alternative (if needed) */
+.light .alloy-scroll-container {
+  background: linear-gradient(145deg, #f0f0f5, #e0e0e5);
+  border-color: #d0d0d5;
+}
+
+.light .alloy-scroll-card {
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  border-color: #e0e0e0;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.light .alloy-scroll-card-title {
+  color: #333333;
+}
+
+.light .alloy-scroll-card-value {
+  color: #2c3e50;
+}
+
+.light .alloy-scroll-card-subtitle {
+  color: #666666;
+}
+
+/* =====================================================
+   COMPOSITION DASHBOARD (SCOPED)
+===================================================== */
+
+.composition-dashboard {
+  padding: 10px 25px;
+}
+
+.composition-dashboard h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.composition-dashboard .subtitle {
+  font-size: 15px;
+  color: #9aa0a6;
+  margin-bottom: 18px;
+}
+
+.composition-dashboard .stPlotlyChart {
+  border-radius: 14px;
+  padding: 6px;
+  background: #0f1117;
+}
+
+/* ===================================================== */
+/* DOWNLOAD PNG BUTTON STYLING                              */
+/* ===================================================== */
+
+button[kind="secondary"] {
+  background: linear-gradient(145deg, #232735, #4c3a3a);
+  color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #4c4d52;
+  padding: 8px 18px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+button[kind="secondary"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 8px #0f111a,
+              -4px -4px 8px #252933;
+}
+
+button[kind="secondary"]:active {
+  transform: scale(0.97);
+  box-shadow: inset 2px 2px 5px #0f111a,
+              inset -2px -2px 5px #252933;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ======== Controls wrapper ======== */
+.controls-section {
+  font-family: "Arial", sans-serif;
+  color: #ffffff;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Make select labels smaller and consistent */
+div[data-testid="stSelectbox"] > label p,
+div[data-testid="stMultiSelect"] > label p,
+div[data-testid="stTextInput"] > label p,
+div[data-testid="stColorPicker"] > label p,
+div[data-testid="stSlider"] > label p {
+  color: #ffffff;
+  font-size: 13px !important;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+/* Make the radio group appear inline (Styling mode) */
+div[role="radiogroup"] {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Ensure each radio option has comfortable padding */
+div[role="radiogroup"] label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 40px;
+  border-radius: 8px;
+   background: linear-gradient(145deg, #1e2028, #2e3038);
+}
+
+/* Highlight selected radio option */
+div[role="radiogroup"] input[type="radio"]:checked + span,
+div[role="radiogroup"] input[type="radio"]:checked + label {
+  background: rgba(66,115,206,0.14);
+  border: 1px solid rgba(66,115,206,0.25);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ---------- User controls horizontally scrollable row ---------- */
+.user-controls-row, .family-controls-row {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px;
+  margin-top: 6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* User cards and family cards as columns */
+.user-card, .family-card {
+  background: linear-gradient(145deg, #232735, #2b2f3b);
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+/* Titles */
+.user-card-title, .family-card-title {
+  margin-bottom: 0px;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 2.05;
+  padding-bottom: 2px;
+  color: var(--st-text, #ffffff); /* fallback to existing theme text color */
+}
+
+/* Compact color picker look */
+.user-card input[type="color"],
+.family-card input[type="color"] {
+  width: 100%;
+  height: 36px;
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 6px;
+}
+
+/* Reduce select sizes inside cards */
+.user-card select, .family-card select {
+  font-size: 13px;
+  padding: 6px;
+  border-radius: 6px;
+}
+
+/* Plot container: ensure responsive behavior */
+.plot-container {
+  transition: height 0.25s ease;
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+/* Make Plotly tick fonts larger and axis titles larger */
+.js-plotly-plot .xtick text, .js-plotly-plot .ytick text {
+  font-size: 14px !important;
+}
+
+/* Ensure the plot area is visually square-ish: use aspect ratio trick */
+.plot-square {
+  position: relative;
+  width: 100%;
+  padding-top: 100%; /* 1:1 aspect ratio */
+}
+.plot-square > .plot-inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+/* Ensure the plotly chart inside the plot-inner fills available area */
+.plot-inner .stPlotlyChart {
+  height: 100% !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 900px) {
+  .user-card, .family-card { min-width: 160px; max-width: 200px; }
+  div[data-testid="stSelectbox"] > label p { font-size: 12px !important; }
+}
+
+/* Ensure number/text input widths are reasonable */
+div[data-testid="stTextInput"] input {
+  min-width: 80px;
+}
+
+/* Remove plot gridlines by coloring grid transparent (Plotly gridlines anyhow are suppressed via fig.update) */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Slightly smaller caption for family card counts */
+.family-card-title small {
+  font-weight: 400;
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+}
+
+/* ---------------------------
+   Styles for users/families pagers and controls
+   Put this in style.css (no inline or injected CSS in Python).
+   --------------------------- */
+
+/* Ensure pager buttons in these wrappers have a sensible min width */
+.users-pager .stButton>button,
+.families-pager .stButton>button {
+  min-width: 120px !important;
+  box-sizing: border-box;
+}
+
+/* Float the right-most button (Next) to the right inside the pager wrapper.
+   Streamlit renders markup differently across versions, so we target the last button
+   as a robust fallback. This keeps Prev left and Next right inside the pager area. */
+.users-pager .stButton>button:last-child,
+.families-pager .stButton>button:last-child {
+  float: right !important;
+}
+
+/* Safety rule: if for some reason the button gets a title attribute that includes
+   'Next users' or 'Next families', keep it right aligned as well. */
+.users-pager .stButton>button[title*="Next"],
+.families-pager .stButton>button[title*="Next"] {
+  float: right !important;
+}
+
+/* Small visual spacing to keep pager tidy */
+.users-pager,
+.families-pager {
+  display: block;
+  width: 100%;
+  overflow: hidden; /* contain floats without altering outer layout */
+  padding-bottom: 6px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
