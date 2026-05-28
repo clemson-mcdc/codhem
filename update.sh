@@ -9,4 +9,4 @@ cd "$REPO_DIR"
 
 git fetch origin "$BRANCH"
 git reset --hard "origin/$BRANCH"
-uv sync --locked
+$HOME/.local/bin/uv sync --locked

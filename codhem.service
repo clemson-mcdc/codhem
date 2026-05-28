@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
+User=mcdc
 WorkingDirectory=/opt/mcdc/codhem
 ExecStartPre=/usr/bin/env bash /opt/mcdc/codhem/update.sh
 ExecStart=/usr/bin/env bash -lc 'cd /opt/mcdc/codhem && uv run streamlit run main.py --server.headless true'
