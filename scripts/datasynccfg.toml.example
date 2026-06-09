@@ -1,0 +1,17 @@
+[ssh]
+host = "mcdc-mgt.cecas.clemson.edu"
+port = 22
+user = "example-user"
+key_path = ""
+
+[mongo]
+host = "127.0.0.1"
+port = 27017
+database = "codhem"
+collection = "records"
+username = ""
+password = ""
+authentication_database = "admin"
+
+[files]
+target_path = "/opt/mcdc/codhem/data/"
