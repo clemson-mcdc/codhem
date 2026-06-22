@@ -187,3 +187,70 @@ def query_literature_data(
     )
     rows = [_flatten_literature_document(document) for document in documents]
     return pd.DataFrame(rows)
+
+
+def search_literature_data(query: dict | None = None, limit: int = 5):
+    query = query or {}
+    if not isinstance(query, dict):
+        return []
+
+    clauses = []
+
+    composition = str(query.get("composition", "")).strip()
+    if composition:
+        clauses.append({"composition": {"$regex": composition, "$options": "i"}})
+
+    doi = str(query.get("doi", "")).strip()
+    if doi:
+        clauses.append({"doi": {"$regex": doi, "$options": "i"}})
+
+    record_id = str(query.get("record_id", "")).strip()
+    if record_id:
+        clauses.append({"unique_id": {"$regex": record_id, "$options": "i"}})
+
+    phase = str(query.get("phase", "")).strip()
+    if phase:
+        clauses.append(
+            {
+                "$or": [
+                    {"phase_data.phase": {"$regex": phase, "$options": "i"}},
+                    {
+                        "phase_data.type_of_phase": {
+                            "$regex": phase,
+                            "$options": "i",
+                        }
+                    },
+                    {
+                        "phase_data.types_of_phases": {
+                            "$regex": phase,
+                            "$options": "i",
+                        }
+                    },
+                ]
+            }
+        )
+
+    test_type = str(query.get("test_type", "")).strip()
+    if test_type:
+        clauses.append(
+            {"test_data.type_of_test": {"$regex": test_type, "$options": "i"}}
+        )
+
+    mongo_query = {} if not clauses else clauses[0] if len(clauses) == 1 else {"$and": clauses}
+    documents = list(
+        _get_literature_collection().find(
+            mongo_query,
+            {
+                "_id": 0,
+                "unique_id": 1,
+                "composition": 1,
+                "doi": 1,
+                "density": 1,
+                "phase_data": 1,
+                "mechanical_properties": 1,
+                "test_data": 1,
+            },
+        ).limit(max(1, min(limit, 10)))
+    )
+
+    return [_flatten_literature_document(document) for document in documents]

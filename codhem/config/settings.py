@@ -22,11 +22,20 @@ class ModelApiSettings:
 
 
 @dataclass(frozen=True)
+class LlmSettings:
+    api_key: str
+    base_url: str
+    model: str
+    system_prompt: str
+
+
+@dataclass(frozen=True)
 class Settings:
     app_name: str
     dataset_limit: int
     database: DatabaseSettings
     model_api: ModelApiSettings
+    llm: LlmSettings
 
 
 def get_settings():
@@ -36,6 +45,7 @@ def get_settings():
 
     database_config = config["database"]
     model_api_config = config.get("model_api", {})
+    llm_config = config.get("llm", {})
 
     return Settings(
         app_name=config.get("app", {}).get("name", "codhem"),
@@ -51,5 +61,14 @@ def get_settings():
             host=model_api_config.get("host", "127.0.0.1"),
             port=model_api_config.get("port", 8000),
             base_path=model_api_config.get("base_path", "/api/ml-models"),
+        ),
+        llm=LlmSettings(
+            api_key=llm_config.get("api_key", ""),
+            base_url=llm_config.get("base_url", "https://llm.rcd.clemson.edu/v1"),
+            model=llm_config.get("model", "gptoss-120b"),
+            system_prompt=llm_config.get(
+                "system_prompt",
+                "You are a helpful assistant.",
+            ),
         ),
     )

@@ -178,6 +178,12 @@ def main():
         icon=":material/tune:",
         url_path="ml-models-rhea-mpnn",
     )
+    mcdc_llm_page = st.Page(
+        ROOT_DIR / "pages" / "ml_models" / "mcdc_llm.py",
+        title="MCDC LLM",
+        icon=":material/chat:",
+        url_path="ml-models-mcdc-llm",
+    )
     research_overview_page = st.Page(
         ROOT_DIR / "pages" / "research" / "overview.py",
         title="Overview",
@@ -259,7 +265,7 @@ def main():
     if is_authenticated() and is_verified_user():
         navigation_pages = {
             "Application": [home_page, dashboard_page, material_database_page],
-            "ML Models": [models_page, rhea_mpnn_page],
+            "ML Models": [mcdc_llm_page, models_page, rhea_mpnn_page],
             "MCDC Research": [
                 research_overview_page,
                 research_rhea_dft_data_page,

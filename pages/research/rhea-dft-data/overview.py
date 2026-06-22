@@ -717,18 +717,13 @@ render_periodic_table(
     key_prefix="rhea-dft-data-periodic-table",
 )
 
-selected_text = ", ".join(st.session_state.selected_elements) if st.session_state.selected_elements else "<i>None</i>"
-html_content = f"""
-<div class="outer-center">
-    <div class="inner-left">Selected Elements</div>
-    <div class="inner-right">{selected_text}</div>
-</div>
-"""
-st.markdown(html_content, unsafe_allow_html=True)
-
-if st.button("Clear All Selections", key="clear_periodic", type="secondary"):
-    st.session_state.selected_elements = []
-    st.rerun()
+if st.session_state.selected_elements:
+    st.caption(f"Selected elements: {', '.join(st.session_state.selected_elements)}")
+    if st.button("Clear selected elements", key="clear_periodic", type="secondary"):
+        st.session_state.selected_elements = []
+        st.rerun()
+else:
+    st.caption("Select an element to show filtered alloys.")
 
 
 # ============================================================

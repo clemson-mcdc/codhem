@@ -13,3 +13,9 @@ password = ""
 host = "127.0.0.1"
 port = 8000
 base_path = "/api/ml-models"
+
+[llm]
+api_key = "YOUR_RCD_LLM_KEY_HERE"
+base_url = "https://llm.rcd.clemson.edu/v1"
+model = "gptoss-120b"
+system_prompt = "You are a helpful assistant."

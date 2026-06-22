@@ -83,10 +83,30 @@ results = query_literature_data(
     filter_state["composition_ranges"],
 )
 
+display_results = results.copy()
+if "DOI" in display_results.columns:
+    display_results["DOI"] = display_results["DOI"].map(
+        lambda doi: (
+            f"https://{doi}"
+            if doi and str(doi).startswith("doi.org")
+            else (f"https://doi.org/{doi}" if doi else "")
+        )
+    )
+
 st.divider()
 st.subheader("Database Results")
 st.caption(f"{len(results)} records")
-st.dataframe(results, width="stretch", hide_index=True)
+st.dataframe(
+    display_results,
+    width="stretch",
+    hide_index=False,
+    column_config={
+        "DOI": st.column_config.LinkColumn(
+            "DOI",
+            display_text=r"https://doi\.org/(.*)",
+        ),
+    },
+)
 
 st.divider()
 st.subheader("Data Visualization")
