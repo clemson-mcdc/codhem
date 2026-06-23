@@ -236,6 +236,37 @@ def search_literature_data(query: dict | None = None, limit: int = 5):
             {"test_data.type_of_test": {"$regex": test_type, "$options": "i"}}
         )
 
+    elements_present = query.get("elements_present", [])
+    if isinstance(elements_present, str):
+        elements_present = [elements_present]
+    if isinstance(elements_present, list):
+        for element in elements_present:
+            normalized_element = str(element).strip().lower()
+            if normalized_element:
+                clauses.append(
+                    {f"element_composition.{normalized_element}": {"$exists": True}}
+                )
+
+    density_min = query.get("density_min")
+    density_max = query.get("density_max")
+    density_range = {}
+    if isinstance(density_min, int | float):
+        density_range["$gte"] = density_min
+    if isinstance(density_max, int | float):
+        density_range["$lte"] = density_max
+    if density_range:
+        clauses.append({"density": density_range})
+
+    elastic_modulus_min = query.get("elastic_modulus_min")
+    elastic_modulus_max = query.get("elastic_modulus_max")
+    elastic_modulus_range = {}
+    if isinstance(elastic_modulus_min, int | float):
+        elastic_modulus_range["$gte"] = elastic_modulus_min
+    if isinstance(elastic_modulus_max, int | float):
+        elastic_modulus_range["$lte"] = elastic_modulus_max
+    if elastic_modulus_range:
+        clauses.append({"mechanical_properties.elastic_modulus": elastic_modulus_range})
+
     mongo_query = {} if not clauses else clauses[0] if len(clauses) == 1 else {"$and": clauses}
     documents = list(
         _get_literature_collection().find(

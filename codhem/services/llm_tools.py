@@ -10,8 +10,10 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
                 "Fetch literature records that match a structured JSON query. "
                 "Convert the user's natural-language request into a JSON object "
                 "and only include the fields needed for that request. Supported "
-                "external fields are composition, doi, record_id, phase, and "
-                "test_type. Omit fields that the user did not ask for. Use limit "
+                "external fields are composition, doi, record_id, phase, test_type, "
+                "elements_present, density_min, density_max, elastic_modulus_min, "
+                "and elastic_modulus_max. Omit fields that the user did not ask "
+                "for. Use limit "
                 "to control how many matching records to return."
             ),
             "parameters": {
@@ -21,8 +23,10 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
                         "type": "object",
                         "description": (
                             "Structured lookup object built from the user's request. "
-                            "Use optional fields composition, doi, record_id, phase, "
-                            "and test_type. Example: {composition: AlCoCrFeNi, phase: FCC}."
+                            "Use optional fields composition, doi, record_id, phase, test_type, "
+                            "elements_present, density_min, density_max, "
+                            "elastic_modulus_min, and elastic_modulus_max. Example: "
+                            "{composition: AlCoCrFeNi, phase: FCC, density_min: 7.5}."
                         ),
                         "properties": {
                             "composition": {
@@ -44,6 +48,29 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
                             "test_type": {
                                 "type": "string",
                                 "description": "Test category requested by the user.",
+                            },
+                            "elements_present": {
+                                "type": "array",
+                                "description": "List of element symbols that must be present in the material.",
+                                "items": {
+                                    "type": "string"
+                                },
+                            },
+                            "density_min": {
+                                "type": "number",
+                                "description": "Minimum density requested by the user.",
+                            },
+                            "density_max": {
+                                "type": "number",
+                                "description": "Maximum density requested by the user.",
+                            },
+                            "elastic_modulus_min": {
+                                "type": "number",
+                                "description": "Minimum elastic modulus requested by the user.",
+                            },
+                            "elastic_modulus_max": {
+                                "type": "number",
+                                "description": "Maximum elastic modulus requested by the user.",
                             },
                         },
                         "additionalProperties": False,
