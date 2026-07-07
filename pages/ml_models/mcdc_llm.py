@@ -2,7 +2,7 @@ import streamlit as st
 
 from codhem.config.settings import get_settings
 from codhem.services.auth_service import require_registered_user
-from codhem.services.llm_chat_service import generate_assistant_reply
+from codhem.services.llm_chat_service import build_system_prompt, generate_assistant_reply
 
 PAGE_TITLE = "MCDC LLM"
 PAGE_SUMMARY = "Ask questions, explore literature records, and run supported materials-model services from one chat interface."
@@ -19,7 +19,7 @@ def initialize_session_state():
 
     llm_settings = get_settings().llm
     st.session_state["mcdc_llm_messages"] = [
-        {"role": "system", "content": llm_settings.system_prompt},
+        {"role": "system", "content": build_system_prompt(llm_settings.system_prompt)},
         {"role": "assistant", "content": WELCOME_MESSAGE},
     ]
 

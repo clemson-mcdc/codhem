@@ -9,6 +9,22 @@ from codhem.services.llm_tools import TOOLS
 from codhem.services.rhea_mpnn_service import run_rhea_mpnn_prediction
 
 
+RESPONSE_POLICY = (
+    "Answer only what the user asks by default and do not add extra inferred "
+    "information unless the user explicitly asks for it. Keep the tone formal. "
+    "Do not use emoji. Do not ask follow-up questions by default or add closing "
+    "prompts such as asking whether the user wants more help."
+)
+
+
+def build_system_prompt(base_prompt: str):
+    normalized_base_prompt = base_prompt.strip()
+    if not normalized_base_prompt:
+        normalized_base_prompt = "You are MCDC LLM."
+
+    return f"{normalized_base_prompt} {RESPONSE_POLICY}"
+
+
 def _execute_tool_call(tool_call):
     arguments = json.loads(tool_call.function.arguments or "{}")
 
