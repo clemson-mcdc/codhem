@@ -3,6 +3,7 @@ import json
 from openai import OpenAI
 
 from codhem.config.settings import get_settings
+from codhem.services.dft_calculations_service import search_dft_calculations
 from codhem.services.literature_data_service import search_literature_data
 from codhem.services.llm_tools import TOOLS
 from codhem.services.rhea_mpnn_service import run_rhea_mpnn_prediction
@@ -23,6 +24,13 @@ def _execute_tool_call(tool_call):
             composition=arguments.get("composition", ""),
         )
         return json.dumps(prediction, default=str)
+
+    if tool_call.function.name == "search_dft_calculations":
+        records = search_dft_calculations(
+            query=arguments.get("query", {}),
+            limit=arguments.get("limit", 5),
+        )
+        return json.dumps({"records": records}, default=str)
 
     raise RuntimeError(f"Unsupported tool call: {tool_call.function.name}")
 

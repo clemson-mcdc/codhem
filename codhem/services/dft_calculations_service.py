@@ -107,3 +107,120 @@ def build_dft_calculations_dashboard_dataframe():
         rows.append(row)
 
     return pd.DataFrame(rows)
+
+
+
+def _build_dft_result_row(row):
+    data_paths = row.get("data") if isinstance(row.get("data"), dict) else {}
+    shear_modulus = row.get("shear_modulus")
+    youngs_modulus = row.get("youngs_modulus")
+    shear_modulus_average = None
+    youngs_modulus_e_vrh = None
+
+    if isinstance(shear_modulus, dict):
+        average_value = shear_modulus.get("average")
+        if isinstance(average_value, (int, float)):
+            shear_modulus_average = float(average_value)
+
+    if isinstance(youngs_modulus, dict):
+        e_vrh_value = youngs_modulus.get("e_vrh")
+        if isinstance(e_vrh_value, (int, float)):
+            youngs_modulus_e_vrh = float(e_vrh_value)
+
+    return {
+        "unique_id": row.get("unique_id", ""),
+        "alloy": row.get("alloy", ""),
+        "structure": row.get("structure", ""),
+        "atom_count": row.get("atom_count"),
+        "complexity": row.get("complexity", ""),
+        "has_elastic": bool(row.get("has_elastic", False)),
+        "elements_present": row.get("element_symbols", []),
+        "fermi_energy": row.get("fermi_energy"),
+        "bulk_modulus": row.get("bulk_modulus"),
+        "poisson_ratio": row.get("poisson_ratio"),
+        "pugh_ratio": row.get("pugh_ratio"),
+        "dos_at_fermi": row.get("dos_at_fermi"),
+        "shear_modulus_average": shear_modulus_average,
+        "youngs_modulus_e_vrh": youngs_modulus_e_vrh,
+        "data_available": {
+            "contcar": bool(data_paths.get("contcar")),
+            "pdos": bool(data_paths.get("pdos")),
+            "tdos": bool(data_paths.get("tdos")),
+        },
+    }
+
+
+def search_dft_calculations(query: dict | None = None, limit: int = 5):
+    query = query or {}
+    if not isinstance(query, dict):
+        return []
+
+    dataframe = build_dft_calculations_dashboard_dataframe().copy()
+
+    alloy = str(query.get("alloy", "")).strip()
+    if alloy:
+        dataframe = dataframe[
+            dataframe["alloy"].fillna("").str.contains(alloy, case=False, regex=False)
+        ]
+
+    record_id = str(query.get("record_id", "")).strip()
+    if record_id:
+        dataframe = dataframe[
+            dataframe["unique_id"].fillna("").str.contains(
+                record_id,
+                case=False,
+                regex=False,
+            )
+        ]
+
+    structure = str(query.get("structure", "")).strip()
+    if structure:
+        dataframe = dataframe[
+            dataframe["structure"].fillna("").str.contains(
+                structure,
+                case=False,
+                regex=False,
+            )
+        ]
+
+    complexity = str(query.get("complexity", "")).strip()
+    if complexity:
+        dataframe = dataframe[
+            dataframe["complexity"].fillna("").str.contains(
+                complexity,
+                case=False,
+                regex=False,
+            )
+        ]
+
+    has_elastic = query.get("has_elastic")
+    if isinstance(has_elastic, bool):
+        dataframe = dataframe[dataframe["has_elastic"] == has_elastic]
+
+    elements_present = query.get("elements_present", [])
+    if isinstance(elements_present, str):
+        elements_present = [elements_present]
+    if isinstance(elements_present, list):
+        for element in elements_present:
+            normalized_element = str(element).strip().capitalize()
+            if not normalized_element:
+                continue
+            column_name = f"{normalized_element}_present"
+            if column_name in dataframe.columns:
+                dataframe = dataframe[dataframe[column_name] == 1]
+
+    numeric_filters = [
+        ("atom_count", "atom_count_min", "atom_count_max"),
+        ("bulk_modulus", "bulk_modulus_min", "bulk_modulus_max"),
+        ("pugh_ratio", "pugh_ratio_min", "pugh_ratio_max"),
+    ]
+    for column_name, minimum_key, maximum_key in numeric_filters:
+        minimum = query.get(minimum_key)
+        maximum = query.get(maximum_key)
+        if isinstance(minimum, int | float):
+            dataframe = dataframe[dataframe[column_name].notna() & (dataframe[column_name] >= minimum)]
+        if isinstance(maximum, int | float):
+            dataframe = dataframe[dataframe[column_name].notna() & (dataframe[column_name] <= maximum)]
+
+    limited_rows = dataframe.head(max(1, min(limit, 10))).to_dict("records")
+    return [_build_dft_result_row(row) for row in limited_rows]
