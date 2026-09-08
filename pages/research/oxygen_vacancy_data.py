@@ -319,7 +319,6 @@ selected_system = st.selectbox(
 )
 records = get_oxygen_vacancy_system_records(selected_system)
 
-st.divider()
 st.subheader("Matching oxygen-vacancy records")
 if not records:
     st.info("No records match the selected six-neighbor composition.")
@@ -363,10 +362,10 @@ else:
             "Neighbor composition": record.neighbor_composition,
             "Vacancy position": record.vacancy_position,
             "Index": record.index,
-            "Formation energy (eV)": record.vacancy_formation_energy,
+            "VFE (eV)": record.vacancy_formation_energy,
             "Defect energy (eV)": record.defect_energy,
             "Oxygen vacancy energy (eV)": record.oxygen_vacancy_energy,
-            "Bader OV nearest neighbors": (
+            "Bader charged": (
                 record.bader.vacancy_nearest_neighbors if record.bader else None
             ),
             "Volume ratio": record.volume.ratio if record.volume else None,
@@ -380,6 +379,13 @@ else:
         table_rows,
         width="stretch",
         hide_index=True,
+        column_config={
+            "Index": None,
+            "Defect energy (eV)": None,
+            "Oxygen vacancy energy (eV)": None,
+            "Volume ratio": None,
+            "Final displacement": None,
+        },
         key=table_key,
         on_select="rerun",
         selection_mode="single-row",
