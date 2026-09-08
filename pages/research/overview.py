@@ -19,3 +19,8 @@ st.page_link(
     label="RHEA DFT Data",
     icon=":material/arrow_forward:",
 )
+st.page_link(
+    "pages/research/oxygen_vacancy_data.py",
+    label="Oxygen Vacancy Data",
+    icon=":material/arrow_forward:",
+)

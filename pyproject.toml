@@ -6,9 +6,12 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "authlib>=1.7.0",
+    "ipython-genutils>=0.2.0",
     "openai>=2.41.1",
+    "openpyxl>=3.1.5",
     "plotly>=6.7.0",
     "pymongo>=4.17.0",
     "scipy>=1.17.1",
+    "stmol>=0.0.9",
     "streamlit>=1.56.0",
 ]

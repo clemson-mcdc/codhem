@@ -196,6 +196,12 @@ def main():
         icon=":material/person:",
         url_path="research-rhea-dft-data",
     )
+    research_oxygen_vacancy_data_page = st.Page(
+        ROOT_DIR / "pages" / "research" / "oxygen_vacancy_data.py",
+        title="Oxygen Vacancy Data",
+        icon=":material/science:",
+        url_path="research-oxygen-vacancy-data",
+    )
     research_rhea_dft_data_total_calculations_page = st.Page(
         ROOT_DIR / "pages" / "research" / "rhea-dft-data" / "total_calculations.py",
         title="RHEA DFT Data Total Calculations",
@@ -268,6 +274,7 @@ def main():
             "ML Models": [mcdc_llm_page, models_page, rhea_mpnn_page],
             "MCDC Research": [
                 research_overview_page,
+                research_oxygen_vacancy_data_page,
                 research_rhea_dft_data_page,
                 research_rhea_dft_data_total_calculations_page,
                 research_rhea_dft_data_completed_elastic_page,
