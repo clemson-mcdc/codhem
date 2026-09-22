@@ -2,7 +2,10 @@ import streamlit as st
 
 from codhem.config.settings import get_settings
 from codhem.services.auth_service import require_registered_user
-from codhem.services.llm_chat_service import build_system_prompt, generate_assistant_reply
+from codhem.services.llm_chat_service import (
+    build_system_prompt,
+    generate_assistant_reply,
+)
 
 PAGE_TITLE = "MCDC LLM"
 PAGE_SUMMARY = "Ask questions, explore literature records, and run supported materials-model services from one chat interface."
@@ -41,9 +44,7 @@ def validate_llm_settings():
     llm_settings = get_settings().llm
 
     if not llm_settings.api_key or llm_settings.api_key == "YOUR_RCD_LLM_KEY_HERE":
-        st.error(
-            "Set `llm.api_key` in `config.toml` before using the MCDC LLM page."
-        )
+        st.error("Set `llm.api_key` in `config.toml` before using the MCDC LLM page.")
         st.stop()
 
     return llm_settings

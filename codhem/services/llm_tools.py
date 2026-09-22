@@ -1,6 +1,19 @@
 from openai.types.chat import ChatCompletionToolUnionParam
 
 
+def _range_property(description):
+    return {
+        "type": "object",
+        "description": description,
+        "properties": {
+            "lt": {"type": "number", "description": "Less than."},
+            "gt": {"type": "number", "description": "Greater than."},
+            "eq": {"type": "number", "description": "Equal to."},
+        },
+        "additionalProperties": False,
+    }
+
+
 TOOLS: list[ChatCompletionToolUnionParam] = [
     {
         "type": "function",
@@ -8,12 +21,15 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
             "name": "search_literature_data",
             "description": (
                 "Fetch literature records that match a structured JSON query. "
+                "Literature data is also referred to as CODHEM/COD'HEM data. "
                 "Convert the user's natural-language request into a JSON object "
                 "and only include the fields needed for that request. Supported "
                 "external fields are composition, doi, record_id, phase, test_type, "
-                "elements_present, density_min, density_max, elastic_modulus_min, "
-                "and elastic_modulus_max. Omit fields that the user did not ask "
-                "for. Use limit to control how many matching records to return."
+                "elements_present, density, elastic_modulus, sigma_at_23_c, "
+                "sigma_at_1000_c, sigma_at_1200_c, shear_modulus, c11, "
+                "fracture_toughness, and ductility. Numeric fields use an object "
+                "with any needed lt, gt, or eq properties. Omit fields that the user did "
+                "not ask for. Use limit to control how many matching records to return."
             ),
             "parameters": {
                 "type": "object",
@@ -23,9 +39,12 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
                         "description": (
                             "Structured lookup object built from the user's request. "
                             "Use optional fields composition, doi, record_id, phase, "
-                            "test_type, elements_present, density_min, density_max, "
-                            "elastic_modulus_min, and elastic_modulus_max. Example: "
-                            "{composition: AlCoCrFeNi, phase: FCC, density_min: 7.5}."
+                            "test_type, elements_present, and numeric fields density, "
+                            "elastic_modulus, sigma_at_23_c, sigma_at_1000_c, "
+                            "sigma_at_1200_c, shear_modulus, c11, fracture_toughness, "
+                            "and ductility. Numeric values use {lt: number, gt: number, "
+                            "or eq: number} as needed. Example: {composition: AlCoCrFeNi, "
+                            "phase: FCC, density: {gt: 7.5}}."
                         ),
                         "properties": {
                             "composition": {
@@ -53,30 +72,21 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
                                 "description": "List of element symbols that must be present in the material.",
                                 "items": {"type": "string"},
                             },
-                            "density_min": {
-                                "type": "number",
-                                "description": "Minimum density requested by the user.",
-                            },
-                            "density_max": {
-                                "type": "number",
-                                "description": "Maximum density requested by the user.",
-                            },
-                            "elastic_modulus_min": {
-                                "type": "number",
-                                "description": "Minimum elastic modulus requested by the user.",
-                            },
-                            "elastic_modulus_max": {
-                                "type": "number",
-                                "description": "Maximum elastic modulus requested by the user.",
-                            },
+                            "density": _range_property("Density filter."),
+                            "elastic_modulus": _range_property("Elastic modulus filter."),
+                            "sigma_at_23_c": _range_property("Strength at 23 C filter."),
+                            "sigma_at_1000_c": _range_property("Strength at 1000 C filter."),
+                            "sigma_at_1200_c": _range_property("Strength at 1200 C filter."),
+                            "shear_modulus": _range_property("Shear modulus filter."),
+                            "c11": _range_property("C11 filter."),
+                            "fracture_toughness": _range_property("Fracture toughness filter."),
+                            "ductility": _range_property("Ductility filter."),
                         },
                         "additionalProperties": False,
                     },
                     "limit": {
                         "type": "integer",
                         "description": "Maximum number of matching records to return.",
-                        "minimum": 1,
-                        "maximum": 10,
                     },
                 },
                 "required": [],
@@ -168,8 +178,6 @@ TOOLS: list[ChatCompletionToolUnionParam] = [
                     "limit": {
                         "type": "integer",
                         "description": "Maximum number of matching DFT records to return.",
-                        "minimum": 1,
-                        "maximum": 10,
                     },
                 },
                 "required": [],

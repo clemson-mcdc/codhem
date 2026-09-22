@@ -71,12 +71,17 @@ def build_dft_calculations_dashboard_dataframe():
         row["_id"] = row.pop("mongo_id")
         row["unique_id"] = row["unique_id"] or row["_id"]
 
-        composition = row["element_composition"] if isinstance(row["element_composition"], dict) else {}
+        composition = (
+            row["element_composition"]
+            if isinstance(row["element_composition"], dict)
+            else {}
+        )
         normalized_composition = {
-            symbol.upper(): value
-            for symbol, value in composition.items()
+            symbol.upper(): value for symbol, value in composition.items()
         }
-        element_symbols = [symbol.capitalize() for symbol in normalized_composition.keys()]
+        element_symbols = [
+            symbol.capitalize() for symbol in normalized_composition.keys()
+        ]
 
         elastic_values = list(row["elastic_constants"].values())
         shear_values = list(row["shear_modulus"].values())
@@ -93,12 +98,16 @@ def build_dft_calculations_dashboard_dataframe():
         row["element_symbols"] = element_symbols
         row["element_count"] = len(element_symbols)
         row["complexity"] = (
-            ["Pure", "Binary", "Ternary", "Quaternary", "Quinary"][len(element_symbols) - 1]
+            ["Pure", "Binary", "Ternary", "Quaternary", "Quinary"][
+                len(element_symbols) - 1
+            ]
             if 1 <= len(element_symbols) <= 5
             else ">5 elements"
         )
         row["has_elastic"] = has_elastic
-        row["inv_pugh"] = (1 / row["pugh_ratio"]) if row["pugh_ratio"] not in (None, 0) else None
+        row["inv_pugh"] = (
+            (1 / row["pugh_ratio"]) if row["pugh_ratio"] not in (None, 0) else None
+        )
 
         for symbol in ELEMENT_SYMBOLS:
             row[f"{symbol}_comp"] = normalized_composition.get(symbol.upper(), 0)
@@ -107,7 +116,6 @@ def build_dft_calculations_dashboard_dataframe():
         rows.append(row)
 
     return pd.DataFrame(rows)
-
 
 
 def _build_dft_result_row(row):
@@ -150,7 +158,7 @@ def _build_dft_result_row(row):
     }
 
 
-def search_dft_calculations(query: dict | None = None, limit: int = 5):
+def search_dft_calculations(query: dict | None = None, limit: int = 20):
     query = query or {}
     if not isinstance(query, dict):
         return []
@@ -166,7 +174,9 @@ def search_dft_calculations(query: dict | None = None, limit: int = 5):
     record_id = str(query.get("record_id", "")).strip()
     if record_id:
         dataframe = dataframe[
-            dataframe["unique_id"].fillna("").str.contains(
+            dataframe["unique_id"]
+            .fillna("")
+            .str.contains(
                 record_id,
                 case=False,
                 regex=False,
@@ -176,7 +186,9 @@ def search_dft_calculations(query: dict | None = None, limit: int = 5):
     structure = str(query.get("structure", "")).strip()
     if structure:
         dataframe = dataframe[
-            dataframe["structure"].fillna("").str.contains(
+            dataframe["structure"]
+            .fillna("")
+            .str.contains(
                 structure,
                 case=False,
                 regex=False,
@@ -186,7 +198,9 @@ def search_dft_calculations(query: dict | None = None, limit: int = 5):
     complexity = str(query.get("complexity", "")).strip()
     if complexity:
         dataframe = dataframe[
-            dataframe["complexity"].fillna("").str.contains(
+            dataframe["complexity"]
+            .fillna("")
+            .str.contains(
                 complexity,
                 case=False,
                 regex=False,
@@ -218,9 +232,13 @@ def search_dft_calculations(query: dict | None = None, limit: int = 5):
         minimum = query.get(minimum_key)
         maximum = query.get(maximum_key)
         if isinstance(minimum, int | float):
-            dataframe = dataframe[dataframe[column_name].notna() & (dataframe[column_name] >= minimum)]
+            dataframe = dataframe[
+                dataframe[column_name].notna() & (dataframe[column_name] >= minimum)
+            ]
         if isinstance(maximum, int | float):
-            dataframe = dataframe[dataframe[column_name].notna() & (dataframe[column_name] <= maximum)]
+            dataframe = dataframe[
+                dataframe[column_name].notna() & (dataframe[column_name] <= maximum)
+            ]
 
     limited_rows = dataframe.head(max(1, min(limit, 10))).to_dict("records")
     return [_build_dft_result_row(row) for row in limited_rows]

@@ -8,10 +8,13 @@ from codhem.services.literature_data_service import search_literature_data
 from codhem.services.llm_tools import TOOLS
 from codhem.services.rhea_mpnn_service import run_rhea_mpnn_prediction
 
-
 RESPONSE_POLICY = (
     "Answer only what the user asks by default and do not add extra inferred "
     "information unless the user explicitly asks for it. Keep the tone formal. "
+    "Whenever you show data returned by a tool, explicitly state its source in "
+    "the same response every time: literature results are sourced from the "
+    "CODHEM literature database, DFT results are sourced from the DFT database, "
+    "and RHEA predictions are sourced from the RHEA MPNN model, etc. "
     "Do not use emoji. Do not ask follow-up questions by default or add closing "
     "prompts such as asking whether the user wants more help."
 )
@@ -31,7 +34,7 @@ def _execute_tool_call(tool_call):
     if tool_call.function.name == "search_literature_data":
         records = search_literature_data(
             query=arguments.get("query", {}),
-            limit=arguments.get("limit", 5),
+            limit=arguments.get("limit", 20),
         )
         return json.dumps({"records": records}, default=str)
 
@@ -44,7 +47,7 @@ def _execute_tool_call(tool_call):
     if tool_call.function.name == "search_dft_calculations":
         records = search_dft_calculations(
             query=arguments.get("query", {}),
-            limit=arguments.get("limit", 5),
+            limit=arguments.get("limit", 20),
         )
         return json.dumps({"records": records}, default=str)
 

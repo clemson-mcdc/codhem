@@ -3,7 +3,6 @@ import streamlit as st
 
 from codhem.db.client import DatabaseClient
 
-
 COLLECTION_NAME = "literature_data"
 PROPERTY_PATHS = {
     "rho": "density",
@@ -189,7 +188,7 @@ def query_literature_data(
     return pd.DataFrame(rows)
 
 
-def search_literature_data(query: dict | None = None, limit: int = 5):
+def search_literature_data(query: dict | None = None, limit: int = 20):
     query = query or {}
     if not isinstance(query, dict):
         return []
@@ -247,29 +246,35 @@ def search_literature_data(query: dict | None = None, limit: int = 5):
                     {f"element_composition.{normalized_element}": {"$exists": True}}
                 )
 
-    density_min = query.get("density_min")
-    density_max = query.get("density_max")
-    density_range = {}
-    if isinstance(density_min, int | float):
-        density_range["$gte"] = density_min
-    if isinstance(density_max, int | float):
-        density_range["$lte"] = density_max
-    if density_range:
-        clauses.append({"density": density_range})
+    range_fields = {
+        "density": "density",
+        "elastic_modulus": "mechanical_properties.elastic_modulus",
+        "sigma_at_23_c": "mechanical_properties.sigma_at_23_c",
+        "sigma_at_1000_c": "mechanical_properties.sigma_at_1000_c",
+        "sigma_at_1200_c": "mechanical_properties.sigma_at_1200_c",
+        "shear_modulus": "mechanical_properties.shear_modulus",
+        "c11": "mechanical_properties.c11",
+        "fracture_toughness": "mechanical_properties.fracture_toughness",
+        "ductility": "mechanical_properties.ductility",
+    }
+    for property_name, field_name in range_fields.items():
+        property_filter = query.get(property_name)
+        if not isinstance(property_filter, dict):
+            continue
+        comparisons = {}
+        for key, operator in (("lt", "$lt"), ("gt", "$gt"), ("eq", "$eq")):
+            value = property_filter.get(key)
+            if isinstance(value, int | float):
+                comparisons[operator] = value
+        if comparisons:
+            clauses.append({field_name: comparisons})
 
-    elastic_modulus_min = query.get("elastic_modulus_min")
-    elastic_modulus_max = query.get("elastic_modulus_max")
-    elastic_modulus_range = {}
-    if isinstance(elastic_modulus_min, int | float):
-        elastic_modulus_range["$gte"] = elastic_modulus_min
-    if isinstance(elastic_modulus_max, int | float):
-        elastic_modulus_range["$lte"] = elastic_modulus_max
-    if elastic_modulus_range:
-        clauses.append({"mechanical_properties.elastic_modulus": elastic_modulus_range})
-
-    mongo_query = {} if not clauses else clauses[0] if len(clauses) == 1 else {"$and": clauses}
+    mongo_query = (
+        {} if not clauses else clauses[0] if len(clauses) == 1 else {"$and": clauses}
+    )
     documents = list(
-        _get_literature_collection().find(
+        _get_literature_collection()
+        .find(
             mongo_query,
             {
                 "_id": 0,
@@ -281,7 +286,8 @@ def search_literature_data(query: dict | None = None, limit: int = 5):
                 "mechanical_properties": 1,
                 "test_data": 1,
             },
-        ).limit(max(1, min(limit, 10)))
+        )
+        .limit(max(1, min(limit, 100)))
     )
 
     return [_flatten_literature_document(document) for document in documents]
