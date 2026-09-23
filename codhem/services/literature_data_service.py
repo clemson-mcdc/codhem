@@ -2,6 +2,7 @@ import pandas as pd
 import streamlit as st
 
 from codhem.db.client import DatabaseClient
+from codhem.models.domain import DatabaseStatistics
 
 COLLECTION_NAME = "literature_data"
 PROPERTY_PATHS = {
@@ -19,6 +20,50 @@ PROPERTY_PATHS = {
 def _get_literature_collection():
     client = DatabaseClient()
     return client.get_collection(COLLECTION_NAME)
+
+
+@st.cache_data(ttl=300)
+def get_literature_dashboard_statistics():
+    """Build dashboard counts and distributions from literature records."""
+    collection = _get_literature_collection()
+    element_counts = {}
+    phase_counts = {}
+    for document in collection.find(
+        {}, {"_id": 0, "doi": 1, "element_composition": 1, "phase_data": 1}
+    ):
+        elements = document.get("element_composition") or {}
+        for symbol in elements:
+            label = symbol.capitalize()
+            element_counts[label] = element_counts.get(label, 0) + 1
+
+        phase = str(_get_phase_value(document)).strip()
+        if phase:
+            normalized_phase = phase.upper()
+            if "FCC" in normalized_phase:
+                phase = "FCC"
+            elif "BCC" in normalized_phase:
+                phase = "BCC"
+            else:
+                phase = "Other"
+            phase_counts[phase] = phase_counts.get(phase, 0) + 1
+
+    return DatabaseStatistics(
+        total_compositions=collection.count_documents({}),
+        total_dois=len(collection.distinct("doi", {"doi": {"$nin": [None, ""]}})),
+        element_distribution=[
+            {"label": label, "count": count}
+            for label, count in sorted(element_counts.items())
+        ],
+        phase_distribution=[
+            {"label": label, "count": phase_counts[label]}
+            for label in ("FCC", "BCC", "Other")
+            if label in phase_counts
+        ],
+        distinctive_composition_distribution=[
+            {"label": label, "count": count}
+            for label, count in sorted(element_counts.items())
+        ],
+    )
 
 
 @st.cache_data(ttl=300)

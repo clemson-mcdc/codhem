@@ -15,6 +15,7 @@ RESPONSE_POLICY = (
     "the same response every time: literature results are sourced from the "
     "CODHEM literature database, DFT results are sourced from the DFT database, "
     "and RHEA predictions are sourced from the RHEA MPNN model, etc. "
+    "For every database query, tell the user the limit used for that query. "
     "Do not use emoji. Do not ask follow-up questions by default or add closing "
     "prompts such as asking whether the user wants more help."
 )

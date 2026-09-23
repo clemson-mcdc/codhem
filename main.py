@@ -9,7 +9,7 @@ from codhem.services.auth_service import (
     is_authenticated,
     is_verified_user,
 )
-from codhem.services.data_service import get_database_statistics
+from codhem.services.literature_data_service import get_literature_dashboard_statistics
 
 ROOT_DIR = Path(__file__).resolve().parent
 
@@ -68,7 +68,7 @@ def render_home_page():
 
 
 def render_dashboard_page():
-    stats = get_database_statistics()
+    stats = get_literature_dashboard_statistics()
 
     st.title("CODHEM")
     st.caption("Consolidated Database of High Entropy Materials")
@@ -117,7 +117,7 @@ def render_dashboard_page():
             width="stretch",
         )
 
-    st.markdown("**Element distribution in distinctive compositions**")
+    st.markdown("**Element distribution in compositions**")
     st.vega_lite_chart(
         {
             "data": {"values": stats.distinctive_composition_distribution},
