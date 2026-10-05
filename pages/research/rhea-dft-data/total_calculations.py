@@ -8,7 +8,6 @@ from codhem.services.dft_calculations_service import build_dft_calculations_dash
 require_registered_user()
 
 st.set_page_config(
-    page_title="Total Calculations",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -24,8 +23,12 @@ def load_css():
 
 load_css()
 
-st.title("🧪 DFT Calculations Dashboard")
-st.caption("Structured database of Body-Centered Cubic (BCC) alloys")
+st.title("RHEA DFT Data Total Calculations")
+st.caption(
+    'Inspect the complete RHEA DFT calculation table to compare alloy compositions, '
+    'structures, and available calculated properties. Download the table as CSV or return '
+    'to the overview to explore coverage charts and element filters.'
+)
 st.header("🧮 Total Calculations")
 
 # =====================================================

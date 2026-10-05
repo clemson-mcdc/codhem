@@ -4,7 +4,10 @@ from codhem.services.auth_service import is_authenticated, sign_out
 
 
 st.title("Sign Out")
-st.caption("End your current CODHEM session.")
+st.caption(
+    'Choose Sign Out below to end your current CODHEM session. Sign in again with Google '
+    'when you want to return to the database, research dashboards, or models.'
+)
 
 if not is_authenticated():
     st.info("You are already signed out.")

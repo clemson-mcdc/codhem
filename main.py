@@ -14,9 +14,14 @@ from codhem.services.literature_data_service import get_literature_dashboard_sta
 ROOT_DIR = Path(__file__).resolve().parent
 
 
-def render_home_page():
+def render_home_page(dashboard_page):
+    navigation_disabled = not (is_authenticated() and is_verified_user())
     st.title("CODHEM")
-    st.caption("Consolidated Database of High Entropy Materials")
+    st.caption(
+        "Consolidated Database of High Entropy Materials — a research platform "
+        "bringing together published material properties, computational datasets, "
+        "interactive analysis, and machine learning predictions."
+    )
 
     if is_authenticated():
         current_user = get_current_user()
@@ -43,35 +48,83 @@ def render_home_page():
         )
 
     st.divider()
-    st.subheader("Scientific Data Access")
+    st.subheader("High Entropy Materials Data")
     st.write(
-        "Browse curated high-entropy materials data through a structured material database interface."
+        "COD'HEM organizes literature records for high-entropy materials around "
+        "their compositions, phases, and reported physical and mechanical "
+        "properties. Links to source publications connect individual records "
+        "to the literature, supporting comparisons across materials and studies. "
+        "The platform also brings computational research datasets and prediction "
+        "models into the same environment."
     )
+    if st.button(
+        "Browse Database",
+        icon=":material/table_view:",
+        disabled=navigation_disabled,
+    ):
+        st.switch_page("pages/application/material_database.py")
 
     st.divider()
     st.subheader("Database Exploration")
     st.write(
-        "Filter compositions, inspect material properties, and review records in a searchable table."
+        "The literature database combines periodic-table element selection with "
+        "filters for phase, composition ranges, and material properties. Matching "
+        "records are presented alongside publication references, while interactive "
+        "scatter plots reveal relationships between selected properties. A "
+        "statistics dashboard summarizes composition and publication counts, "
+        "element representation, and phase distributions to describe database coverage."
     )
+    if st.button(
+        "View Dashboard",
+        icon=":material/dashboard:",
+        disabled=navigation_disabled,
+    ):
+        st.switch_page(dashboard_page)
 
     st.divider()
-    st.subheader("Machine Learning Models")
+    st.subheader("Natural-Language Literature Search")
     st.write(
-        "Open model pages, provide inputs, and inspect outputs for research models."
+        "The COD'HEM literature assistant translates natural-language questions "
+        "into structured database searches. Requests can combine compositions, "
+        "elements, phases, publication identifiers, and numeric property "
+        "conditions. Responses summarize matching literature records and identify "
+        "their database source and query limit, providing a conversational way "
+        "to explore the same underlying data."
     )
+    if st.button(
+        "Query using LLM",
+        icon=":material/neurology:",
+        disabled=navigation_disabled,
+    ):
+        st.switch_page("pages/application/llm.py")
 
     st.divider()
     st.subheader("MCDC Research")
     st.write(
-        "Open member dashboards that package recurring research calculations into focused views."
+        "MCDC Research brings together DFT calculations for refractory high-entropy "
+        "alloys, oxygen-vacancy data for high-entropy oxides, and composition-based "
+        "property predictions. Its dashboards combine dataset coverage, property "
+        "comparisons, and detailed analyses of selected records. Dedicated LLM "
+        "assistants support searches within each research dataset and prediction "
+        "requests through the available model."
     )
+    if st.button(
+        "Explore MCDC Research",
+        icon=":material/science:",
+        disabled=navigation_disabled,
+    ):
+        st.switch_page("pages/research/overview.py")
 
 
 def render_dashboard_page():
     stats = get_literature_dashboard_statistics()
 
     st.title("CODHEM")
-    st.caption("Consolidated Database of High Entropy Materials")
+    st.caption(
+        "Review the coverage of the COD'HEM literature database through composition "
+        "and publication counts, element distributions, and reported phases. "
+        "Use Database to explore individual records and filter material properties."
+    )
 
     st.subheader("Database Statistics")
     st.caption("Visualizing data from the High Entropy Materials Database")
@@ -142,65 +195,87 @@ def render_dashboard_page():
 
 def main():
     st.set_page_config(
-        page_title="codhem",
+        page_title="COD'HEM",
         page_icon=":material/science:",
         layout="wide",
         initial_sidebar_state="expanded",
     )
 
-    home_page = st.Page(
-        render_home_page,
-        title="Home",
-        icon=":material/home:",
-        default=True,
-    )
     dashboard_page = st.Page(
         render_dashboard_page,
         title="Dashboard",
         icon=":material/dashboard:",
         url_path="dashboard",
     )
+    home_page = st.Page(
+        lambda: render_home_page(dashboard_page),
+        title="Home",
+        icon=":material/home:",
+        default=True,
+    )
     material_database_page = st.Page(
         ROOT_DIR / "pages" / "application" / "material_database.py",
-        title="COD'HEM Database",
+        title="Database",
         icon=":material/table_view:",
         url_path="material-database",
     )
     models_page = st.Page(
-        ROOT_DIR / "pages" / "ml_models" / "overview.py",
+        ROOT_DIR / "pages" / "research" / "ml_models" / "overview.py",
         title="ML Models",
-        icon=":material/neurology:",
+        icon=":material/hub:",
         url_path="ml-models",
     )
+    models_llm_page = st.Page(
+        ROOT_DIR / "pages" / "research" / "ml_models" / "llm.py",
+        title="ML Models LLM",
+        icon=":material/neurology:",
+        url_path="ml-models-llm",
+        visibility="hidden",
+    )
     rhea_mpnn_page = st.Page(
-        ROOT_DIR / "pages" / "ml_models" / "rhea_mpnn.py",
+        ROOT_DIR / "pages" / "research" / "ml_models" / "rhea_mpnn.py",
         title="RHEA-DOS-E Predictor",
         icon=":material/tune:",
-        url_path="ml-models-rhea-mpnn",
+        url_path="research-rhea-dose-predictor",
+        visibility="hidden",
     )
     mcdc_llm_page = st.Page(
-        ROOT_DIR / "pages" / "ml_models" / "mcdc_llm.py",
-        title="MCDC LLM",
-        icon=":material/chat:",
-        url_path="ml-models-mcdc-llm",
+        ROOT_DIR / "pages" / "application" / "llm.py",
+        title="LLM",
+        icon=":material/neurology:",
+        url_path="llm",
     )
     research_overview_page = st.Page(
         ROOT_DIR / "pages" / "research" / "overview.py",
-        title="Overview",
-        icon=":material/lab_profile:",
+        title="Home",
+        icon=":material/home:",
         url_path="research-overview",
     )
     research_rhea_dft_data_page = st.Page(
         ROOT_DIR / "pages" / "research" / "rhea-dft-data" / "overview.py",
         title="RHEA DFT Data",
-        icon=":material/person:",
-        url_path="research-rhea-dft-data",
+        icon=":material/science:",
+        url_path="rhea-dft-data",
+    )
+    research_rhea_dft_data_llm_page = st.Page(
+        ROOT_DIR / "pages" / "research" / "rhea-dft-data" / "llm.py",
+        title="RHEA DFT Data LLM",
+        icon=":material/neurology:",
+        url_path="rhea-dft-data-llm",
+        visibility="hidden",
     )
     research_oxygen_vacancy_data_page = st.Page(
         ROOT_DIR / "pages" / "research" / "oxygen_vacancy_data.py",
-        title="Oxygen Vacancy Data",
+        title="HEO Vacancy Data",
         icon=":material/science:",
-        url_path="research-oxygen-vacancy-data",
+        url_path="heo-vacancy-data",
+    )
+    research_heo_vacancy_data_llm_page = st.Page(
+        ROOT_DIR / "pages" / "research" / "heo-vacancy-data" / "llm.py",
+        title="HEO Vacancy Data LLM",
+        icon=":material/neurology:",
+        url_path="heo-vacancy-data-llm",
+        visibility="hidden",
     )
     research_rhea_dft_data_total_calculations_page = st.Page(
         ROOT_DIR / "pages" / "research" / "rhea-dft-data" / "total_calculations.py",
@@ -270,12 +345,21 @@ def main():
 
     if is_authenticated() and is_verified_user():
         navigation_pages = {
-            "Application": [home_page, dashboard_page, material_database_page],
-            "ML Models": [mcdc_llm_page, models_page, rhea_mpnn_page],
+            "COD'HEM": [
+                home_page,
+                dashboard_page,
+                material_database_page,
+                mcdc_llm_page,
+            ],
             "MCDC Research": [
                 research_overview_page,
-                research_oxygen_vacancy_data_page,
                 research_rhea_dft_data_page,
+                research_oxygen_vacancy_data_page,
+                research_rhea_dft_data_llm_page,
+                research_heo_vacancy_data_llm_page,
+                models_page,
+                models_llm_page,
+                rhea_mpnn_page,
                 research_rhea_dft_data_total_calculations_page,
                 research_rhea_dft_data_completed_elastic_page,
                 research_rhea_dft_data_missing_elastic_page,
@@ -292,11 +376,17 @@ def main():
         }
     else:
         navigation_pages = {
-            "Application": [home_page],
+            "COD'HEM": [home_page],
             "Account": [sign_in_page],
         }
 
     navigation = st.navigation(navigation_pages, position="sidebar")
+    page_title = (
+        "MCDC Research Home"
+        if navigation is research_overview_page
+        else navigation.title
+    )
+    st.set_page_config(page_title=f"{page_title} — COD'HEM")
     navigation.run()
     render_footer()
 

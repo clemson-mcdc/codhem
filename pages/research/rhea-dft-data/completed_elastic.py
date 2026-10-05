@@ -8,7 +8,6 @@ from codhem.services.dft_calculations_service import build_dft_calculations_dash
 require_registered_user()
 
 st.set_page_config(
-    page_title="Completed Elastic",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -29,8 +28,12 @@ load_css()
 # =====================================================
 
 
-st.title("🧪 DFT Calculations Dashboard")
-st.caption("Structured database of Body-Centered Cubic (BCC) alloys")
+st.title("RHEA DFT Data Completed Elastic")
+st.caption(
+    'Review RHEA DFT records with complete elastic-property data, including elastic '
+    'constants and moduli. Compare the available values in the table and download this '
+    'subset as CSV for further analysis.'
+)
 st.header("✅ Elastic Tensor & DOS Available")
 
 # =====================================================

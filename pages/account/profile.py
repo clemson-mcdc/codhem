@@ -10,7 +10,10 @@ from codhem.services.auth_service import (
 
 
 st.title("Profile")
-st.caption("View and update your CODHEM account details.")
+st.caption(
+    'Review your account identity and assigned role. Update your name, organization, '
+    'country, or position in the table, then choose Save Profile to apply your changes.'
+)
 
 if not is_authenticated():
     st.info("You need to sign in to view your profile.")

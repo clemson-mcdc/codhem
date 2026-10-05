@@ -4,7 +4,11 @@ from codhem.services.auth_service import get_current_user, is_authenticated, sig
 
 
 st.title("Sign In")
-st.caption("Sign in with Google to access CODHEM.")
+st.caption(
+    'Use your Google account to sign in to CODHEM. On your first visit, complete '
+    'registration and wait for administrator verification to access the database, '
+    'research datasets, and models.'
+)
 
 if not is_authenticated():
     if st.button("Continue with Google", width="stretch", key="google-login"):

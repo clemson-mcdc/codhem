@@ -1,7 +1,7 @@
-from functools import partial
 import os
 import re
 import zipfile
+from functools import partial
 from io import BytesIO
 
 import numpy as np
@@ -12,8 +12,9 @@ import streamlit as st
 
 from codhem.components.periodic_table import ELEMENTS, render_periodic_table
 from codhem.services.auth_service import require_registered_user
-from codhem.services.dft_calculations_service import build_dft_calculations_dashboard_dataframe
-
+from codhem.services.dft_calculations_service import (
+    build_dft_calculations_dashboard_dataframe,
+)
 
 require_registered_user()
 
@@ -21,10 +22,9 @@ require_registered_user()
 # PAGE CONFIG
 # =====================================================
 st.set_page_config(
-    page_title="DFT CALCULATIONS DASHBOARD",
     layout="wide",
-    initial_sidebar_state="collapsed"
 )
+
 
 # =====================================================
 # LOAD CSS
@@ -35,13 +35,23 @@ def load_css():
     with open(css_path) as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+
 load_css()
 
 # =====================================================
 # TITLE
 # =====================================================
-st.title("⚛️ DFT Calculation Dashboard for High Entropy Alloys ")
-st.caption("A Structured Computational Repository of Alloy Properties")
+st.title("RHEA DFT Data")
+st.caption(
+    'Explore refractory high-entropy alloy DFT calculations, review elastic-data '
+    'availability, and compare elemental coverage, alloy complexity, moduli, ductility, '
+    'and electronic density of states. Select elements to filter alloys, then open '
+    'detailed analyses or download available calculation files. Query using LLM opens an '
+    'assistant for searching these records.'
+)
+if st.button("Query using LLM", icon=":material/neurology:", type="primary"):
+    st.switch_page("pages/research/rhea-dft-data/llm.py")
+
 
 # =====================================================
 # LOAD DATA
@@ -72,7 +82,7 @@ complexity_color_map = {
     "Ternary": "#FFC107",
     "Quaternary": "#E4507D",
     "Quinary": "#67B651",
-    ">5 elements": "#9C27B0"
+    ">5 elements": "#9C27B0",
 }
 
 elastic_completed = df["has_elastic"]
@@ -95,9 +105,12 @@ with c1:
             </div>
             <div class="metric-button-container">
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
-    st.page_link("pages/research/rhea-dft-data/total_calculations.py", label="View details\u00A0\u00A0 →")
+    st.page_link(
+        "pages/research/rhea-dft-data/total_calculations.py",
+        label="View details\u00a0\u00a0 →",
+    )
     st.markdown("</div></div>", unsafe_allow_html=True)
 
 with c2:
@@ -110,9 +123,12 @@ with c2:
             </div>
             <div class="metric-button-container">
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
-    st.page_link("pages/research/rhea-dft-data/completed_elastic.py", label="View details \u00A0\u00A0 →")
+    st.page_link(
+        "pages/research/rhea-dft-data/completed_elastic.py",
+        label="View details \u00a0\u00a0 →",
+    )
     st.markdown("</div></div>", unsafe_allow_html=True)
 
 with c3:
@@ -125,12 +141,15 @@ with c3:
             </div>
             <div class="metric-button-container">
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
-    st.page_link("pages/research/rhea-dft-data/missing_elastic.py", label="View details\u00A0\u00A0  →")
+    st.page_link(
+        "pages/research/rhea-dft-data/missing_elastic.py",
+        label="View details\u00a0\u00a0  →",
+    )
     st.markdown("</div></div>", unsafe_allow_html=True)
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # =====================================================
 # PLOTS
@@ -151,11 +170,9 @@ with col1:
             total[el] = int(t)
             elastic[el] = int(e)
 
-    element_df = pd.DataFrame({
-        "Element": total.keys(),
-        "Total": total.values(),
-        "Elastic": elastic.values()
-    }).sort_values("Total")
+    element_df = pd.DataFrame(
+        {"Element": total.keys(), "Total": total.values(), "Elastic": elastic.values()}
+    ).sort_values("Total")
 
     fig = go.Figure()
 
@@ -166,9 +183,9 @@ with col1:
         name="Total calculations",
         marker_color="#4273CE",
         # Add hover information
-        hovertemplate="<span style='font-size:16px; color:#AAAAAA'><b>%{y}</b></span><br>" +
-             "<span style='font-size:14px; color:#AAAAAA'>Total: <span style='color:#AAAAAA'>%{x}</span></span>" +
-             "<extra></extra>"
+        hovertemplate="<span style='font-size:16px; color:#AAAAAA'><b>%{y}</b></span><br>"
+        + "<span style='font-size:14px; color:#AAAAAA'>Total: <span style='color:#AAAAAA'>%{x}</span></span>"
+        + "<extra></extra>",
     )
 
     fig.add_bar(
@@ -178,61 +195,48 @@ with col1:
         name="Elastic tensor available",
         marker_color="#20BF65",
         # Add hover information
-        hovertemplate="<span style='font-size:16px; color:#AAAAAA'><b>%{y}</b></span><br>" +
-             "<span style='font-size:14px; color:#AAAAAA'>Total: <span style='color:#AAAAAA'>%{x}</span></span>" +
-             "<extra></extra>"
+        hovertemplate="<span style='font-size:16px; color:#AAAAAA'><b>%{y}</b></span><br>"
+        + "<span style='font-size:14px; color:#AAAAAA'>Total: <span style='color:#AAAAAA'>%{x}</span></span>"
+        + "<extra></extra>",
     )
 
     fig.update_layout(
         barmode="overlay",
         template="plotly_dark",
-
         # IMPORTANT: transparent so card controls background
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-
-        font=dict(size=14),
-        xaxis=dict(
-            title="Number of calculations",
-            title_font=dict(size=16, color="#FFFFFF", weight=700),
-            tickfont=dict(size=13),
-            showgrid=True,
-            gridcolor="#5f5f63",  # Very light vertical grid lines
-            gridwidth=1,
-            showline=True,  # Show axis line
-            linecolor="#5f5f63",  # Axis line color
-            linewidth=2,
-            range=[-1, 340],
-            tickmode="array",  # Use custom tick values
-            tickvals=[0, 50, 100, 150, 200, 250, 300, 340],  # Custom tick positions
-            ticktext=["0", "50", "100", "150", "200", "250", "300", "340"],
-        ),
-        yaxis=dict(
-            title="Element",
-            title_font=dict(size=16, color="#FFFFFF", weight=700),
-            tickfont=dict(size=13)
-        ),
-
-        legend=dict(
-            font=dict(size=16),
-            bordercolor="#2a2f3a",
-            borderwidth=0.5
-        ),
-        
-
-        margin=dict(l=80, r=30, t=10, b=40),
+        font={"size": 14},
+        xaxis={
+            "title": "Number of calculations",
+            "title_font": {"size": 16, "color": "#FFFFFF", "weight": 700},
+            "tickfont": {"size": 13},
+            "showgrid": True,
+            "gridcolor": "#5f5f63",  # Very light vertical grid lines
+            "gridwidth": 1,
+            "showline": True,  # Show axis line
+            "linecolor": "#5f5f63",  # Axis line color
+            "linewidth": 2,
+            "range": [-1, 340],
+            "tickmode": "array",  # Use custom tick values
+            "tickvals": [0, 50, 100, 150, 200, 250, 300, 340],  # Custom tick positions
+            "ticktext": ["0", "50", "100", "150", "200", "250", "300", "340"],
+        },
+        yaxis={
+            "title": "Element",
+            "title_font": {"size": 16, "color": "#FFFFFF", "weight": 700},
+            "tickfont": {"size": 13},
+        },
+        legend={"font": {"size": 16}, "bordercolor": "#2a2f3a", "borderwidth": 0.5},
+        margin={"l": 80, "r": 30, "t": 10, "b": 40},
         height=480,
-
-
-
-        hoverlabel=dict(
-            bgcolor="#1a1d29",  # Dark blue-gray background
-            bordercolor="#5f5f63",  # Border color matching your axis lines
-            font_size=14,
-            font_color="white",
-            font_family="Arial, sans-serif"
-            
-        ),
+        hoverlabel={
+            "bgcolor": "#1a1d29",  # Dark blue-gray background
+            "bordercolor": "#5f5f63",  # Border color matching your axis lines
+            "font_size": 14,
+            "font_color": "white",
+            "font_family": "Arial, sans-serif",
+        },
     )
 
     st.plotly_chart(fig, width="stretch")
@@ -250,37 +254,36 @@ with col2:
         hole=0.6,
         color=counts.index,
         color_discrete_map=complexity_color_map,
-        template="plotly_dark"
+        template="plotly_dark",
     )
 
     fig.update_traces(
         textinfo="label+value",
         textfont_size=16,  # Increased from 14
         textfont_color="black",  # Added: set text color to white
-        marker=dict(line=dict(color="white", width=1.5)),
+        marker={"line": {"color": "white", "width": 1.5}},
         # Optional: improve hover text
-        hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent:.1%}<extra></extra>"
+        hovertemplate="<b>%{label}</b><br>Count: %{value}<br>Percentage: %{percent:.1%}<extra></extra>",
     )
 
     # Update layout - remove legend and adjust fonts
     fig.update_layout(
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(
-            size=16,  # Increased from 14
-            color="Black",
-            weight=700 
-                # Added: set default font color to white
-        ),
+        font={
+            "size": 16,  # Increased from 14
+            "color": "Black",
+            "weight": 700,
+            # Added: set default font color to white
+        },
         # Remove legend completely
         showlegend=False,  # This is the key change
         # Keep the EXACT same height and margins
         height=480,
-        margin=dict(l=40, r=40, t=10, b=40)
+        margin={"l": 40, "r": 40, "t": 10, "b": 40},
     )
 
     st.plotly_chart(fig, width="stretch")
-
 
 
 # =====================================================
@@ -288,7 +291,6 @@ with col2:
 # =====================================================
 st.markdown("<div style='height: 2rem'></div>", unsafe_allow_html=True)
 col3, col4 = st.columns(2)
-
 
 
 with col3:
@@ -300,11 +302,11 @@ with col3:
     plot3_df = completed_df.copy()
     available_complexities = sorted(plot3_df["complexity"].unique().tolist())
     ALL_TAG = "All"
-    
+
     # Initialize session state for selection and widget key
     if "complexity_state_3" not in st.session_state:
         st.session_state.complexity_state_3 = available_complexities
-    
+
     if "widget_key_3" not in st.session_state:
         st.session_state.widget_key_3 = 1000
 
@@ -315,7 +317,7 @@ with col3:
         """Handles the logic when user interacts with the multiselect."""
         current_key = f"complexity_filter_multi_3_{st.session_state.widget_key_3}"
         ui_val = st.session_state[current_key]
-        
+
         if ALL_TAG in ui_val:
             # User wants everything: Reset state and rotate key to refresh UI buttons
             st.session_state.complexity_state_3 = available_complexities
@@ -342,16 +344,16 @@ with col3:
         selected_modulus = st.selectbox(
             "Select Modulus Type:",
             options=list(modulus_options.keys()),
-            key="modulus_selector_plot3_final"
+            key="modulus_selector_plot3_final",
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with dropdown_col2:
         st.markdown('<div class="dropdown-complexity">', unsafe_allow_html=True)
 
         current_selection = st.session_state.complexity_state_3
         remaining = [c for c in available_complexities if c not in current_selection]
-        
+
         # Determine dropdown list: Only show 'All' if 2 or more items are unselected
         if len(remaining) > 1:
             dropdown_options_list = [ALL_TAG] + remaining
@@ -366,22 +368,20 @@ with col3:
             options=current_selection + dropdown_options_list,
             default=current_selection,
             key=dynamic_key,
-            on_change=sync_state_3
+            on_change=sync_state_3,
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------
     # FINAL STATE & DATA FILTERING
     # --------------------------------------------------
     # Use the variable name expected by your downstream plotting code
-    selected_complexities = [c for c in st.session_state.complexity_state_3 if c != ALL_TAG]
+    selected_complexities = [
+        c for c in st.session_state.complexity_state_3 if c != ALL_TAG
+    ]
 
     y_col = modulus_options[selected_modulus]
     filtered_df = plot3_df[plot3_df["complexity"].isin(selected_complexities)].copy()
-
-
-
-
 
     # --------------------------------------------------
     # PLOT
@@ -392,25 +392,27 @@ with col3:
         complexity_df = filtered_df[filtered_df["complexity"] == complexity]
 
         if not complexity_df.empty and complexity in complexity_color_map:
-            fig3.add_trace(go.Scatter(
-                x=1 / complexity_df["pugh_ratio"].replace(0, np.nan),
-                y=complexity_df[y_col],
-                mode="markers",
-                name=complexity,
-                marker=dict(
-                    size=10,
-                    color=complexity_color_map[complexity],
-                    line=dict(width=1, color="white")
-                ),
-                hovertemplate=(
-                    "<b>%{text}</b><br>"
-                    f"{selected_modulus.split()[0]}: %{{y:.1f}} GPa<br>"
-                    "Pugh Ratio: %{x:.2f}<br>"
-                    "Complexity: %{customdata[0]}<extra></extra>"
-                ),
-                text=complexity_df["alloy"],
-                customdata=complexity_df[["complexity"]].values
-            ))
+            fig3.add_trace(
+                go.Scatter(
+                    x=1 / complexity_df["pugh_ratio"].replace(0, np.nan),
+                    y=complexity_df[y_col],
+                    mode="markers",
+                    name=complexity,
+                    marker={
+                        "size": 10,
+                        "color": complexity_color_map[complexity],
+                        "line": {"width": 1, "color": "white"},
+                    },
+                    hovertemplate=(
+                        "<b>%{text}</b><br>"
+                        f"{selected_modulus.split()[0]}: %{{y:.1f}} GPa<br>"
+                        "Pugh Ratio: %{x:.2f}<br>"
+                        "Complexity: %{customdata[0]}<extra></extra>"
+                    ),
+                    text=complexity_df["alloy"],
+                    customdata=complexity_df[["complexity"]].values,
+                )
+            )
 
     # --------------------------------------------------
     # CHART STYLING
@@ -425,35 +427,38 @@ with col3:
         template="plotly_dark",
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(size=14),
-        xaxis=dict(
-            title="1 / Pugh Ratio (Ductility)",
-            title_font=dict(size=16, color="#FFFFFF", weight=700),
-            tickfont=dict(size=13),
-            showgrid=True,
-            gridcolor="#5f5f63",
-            gridwidth=1,
-            showline=True,
-            linecolor="#5f5f63",
-            linewidth=2
-        ),
-        yaxis=dict(
-            title=y_title_map[y_col],
-            title_font=dict(size=16, color="#FFFFFF", weight=700),
-            tickfont=dict(size=13),
-            showgrid=True,
-            gridcolor="#5f5f63",
-            gridwidth=1,
-            showline=True,
-            linecolor="#5f5f63",
-            linewidth=2
-        ),
-        legend=dict(
-            font=dict(size=14),
-            title=dict(text="Alloy Complexity", font=dict(size=14, color="#FFFFFF"))
-        ),
-        margin=dict(l=80, r=30, t=40, b=40),
-        height=480
+        font={"size": 14},
+        xaxis={
+            "title": "1 / Pugh Ratio (Ductility)",
+            "title_font": {"size": 16, "color": "#FFFFFF", "weight": 700},
+            "tickfont": {"size": 13},
+            "showgrid": True,
+            "gridcolor": "#5f5f63",
+            "gridwidth": 1,
+            "showline": True,
+            "linecolor": "#5f5f63",
+            "linewidth": 2,
+        },
+        yaxis={
+            "title": y_title_map[y_col],
+            "title_font": {"size": 16, "color": "#FFFFFF", "weight": 700},
+            "tickfont": {"size": 13},
+            "showgrid": True,
+            "gridcolor": "#5f5f63",
+            "gridwidth": 1,
+            "showline": True,
+            "linecolor": "#5f5f63",
+            "linewidth": 2,
+        },
+        legend={
+            "font": {"size": 14},
+            "title": {
+                "text": "Alloy Complexity",
+                "font": {"size": 14, "color": "#FFFFFF"},
+            },
+        },
+        margin={"l": 80, "r": 30, "t": 40, "b": 40},
+        height=480,
     )
 
     # --------------------------------------------------
@@ -472,7 +477,7 @@ with col3:
         x=0,
         y=1.08,
         showarrow=False,
-        font=dict(size=12, color="#888888")
+        font={"size": 12, "color": "#888888"},
     )
 
     st.plotly_chart(fig3, width="stretch")
@@ -491,7 +496,7 @@ with col4:
     # Initialize session state for Plot 4
     if "complexity_state_4" not in st.session_state:
         st.session_state.complexity_state_4 = available_complexities_4
-    
+
     if "widget_key_4" not in st.session_state:
         st.session_state.widget_key_4 = 4000  # Unique starting key for Plot 4
 
@@ -502,7 +507,7 @@ with col4:
         """Handles logic for Plot 4 multiselect."""
         current_key = f"complexity_filter_multi_4_{st.session_state.widget_key_4}"
         ui_val = st.session_state[current_key]
-        
+
         if ALL_TAG in ui_val:
             # Reset to all and rotate key to force buttons to reappear
             st.session_state.complexity_state_4 = available_complexities_4
@@ -526,15 +531,17 @@ with col4:
             "Select Modulus Type:",
             options=list(modulus_options.keys()),
             index=0,
-            key="modulus_selector_plot4_final"
+            key="modulus_selector_plot4_final",
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with dropdown_col2:
         st.markdown('<div class="dropdown-complexity">', unsafe_allow_html=True)
-        
+
         current_selection_4 = st.session_state.complexity_state_4
-        remaining_4 = [c for c in available_complexities_4 if c not in current_selection_4]
+        remaining_4 = [
+            c for c in available_complexities_4 if c not in current_selection_4
+        ]
 
         # Dropdown list logic: Show 'All' if 2 or more are unselected
         if len(remaining_4) > 1:
@@ -550,15 +557,17 @@ with col4:
             options=current_selection_4 + dropdown_options_list_4,
             default=current_selection_4,
             key=dynamic_key_4,
-            on_change=sync_state_4
+            on_change=sync_state_4,
         )
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # --------------------------------------------------
     # FINAL STATE & DATA FILTERING
     # --------------------------------------------------
     # Extract the actual list for filtering (stripping ALL_TAG if present)
-    selected_complexities_4 = [c for c in st.session_state.complexity_state_4 if c != ALL_TAG]
+    selected_complexities_4 = [
+        c for c in st.session_state.complexity_state_4 if c != ALL_TAG
+    ]
 
     y_col_2 = modulus_options[selected_modulus_2]
     filtered_df_4 = plot4_df[
@@ -570,32 +579,34 @@ with col4:
     fig4 = go.Figure()
 
     for complexity in selected_complexities_4:
-        complexity_df = filtered_df_4[
-            filtered_df_4["complexity"] == complexity
-        ]
+        complexity_df = filtered_df_4[filtered_df_4["complexity"] == complexity]
 
         if not complexity_df.empty and complexity in complexity_color_map:
-            fig4.add_trace(go.Scatter(
-                x=complexity_df["dos_at_fermi"].apply(
-                    lambda values: values.get("total") if isinstance(values, dict) else None
-                ),
-                y=complexity_df[y_col_2],
-                mode="markers",
-                name=complexity,
-                marker=dict(
-                    size=10,
-                    color=complexity_color_map[complexity],
-                    line=dict(width=1, color="white")
-                ),
-                hovertemplate=(
-                    "<b>%{text}</b><br>"
-                    f"{selected_modulus_2.split()[0]}: %{{y:.1f}} GPa<br>"
-                    "N<sub>ef</sub>: %{x:.2f} states/eV/atom<br>"
-                    "Complexity: %{customdata[0]}<extra></extra>"
-                ),
-                text=complexity_df["alloy"],
-                customdata=complexity_df[["complexity"]].values
-            ))
+            fig4.add_trace(
+                go.Scatter(
+                    x=complexity_df["dos_at_fermi"].apply(
+                        lambda values: (
+                            values.get("total") if isinstance(values, dict) else None
+                        )
+                    ),
+                    y=complexity_df[y_col_2],
+                    mode="markers",
+                    name=complexity,
+                    marker={
+                        "size": 10,
+                        "color": complexity_color_map[complexity],
+                        "line": {"width": 1, "color": "white"},
+                    },
+                    hovertemplate=(
+                        "<b>%{text}</b><br>"
+                        f"{selected_modulus_2.split()[0]}: %{{y:.1f}} GPa<br>"
+                        "N<sub>ef</sub>: %{x:.2f} states/eV/atom<br>"
+                        "Complexity: %{customdata[0]}<extra></extra>"
+                    ),
+                    text=complexity_df["alloy"],
+                    customdata=complexity_df[["complexity"]].values,
+                )
+            )
 
     # --------------------------------------------------
     # CHART STYLING
@@ -610,36 +621,38 @@ with col4:
         template="plotly_dark",
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        font=dict(size=14),
-        xaxis=dict(
-            title="N<sub>ef</sub> (states/eV/atom)",
-            title_font=dict(size=16, color="#FFFFFF", weight=700),
-            tickfont=dict(size=13),
-            showgrid=True,
-            gridcolor="#5f5f63",
-            gridwidth=1,
-            showline=True,
-            linecolor="#5f5f63",
-            linewidth=2
-        ),
-        yaxis=dict(
-            title=y_title_map_2[y_col_2],
-            title_font=dict(size=16, color="#FFFFFF", weight=700),
-            tickfont=dict(size=13),
-            showgrid=True,
-            gridcolor="#5f5f63",
-            gridwidth=1,
-            showline=True,
-            linecolor="#5f5f63",
-            linewidth=2
-        ),
-        legend=dict(
-            font=dict(size=14),
-           
-            title=dict(text="Alloy Complexity", font=dict(size=14, color="#FFFFFF"))
-        ),
-        margin=dict(l=80, r=30, t=40, b=40),
-        height=480
+        font={"size": 14},
+        xaxis={
+            "title": "N<sub>ef</sub> (states/eV/atom)",
+            "title_font": {"size": 16, "color": "#FFFFFF", "weight": 700},
+            "tickfont": {"size": 13},
+            "showgrid": True,
+            "gridcolor": "#5f5f63",
+            "gridwidth": 1,
+            "showline": True,
+            "linecolor": "#5f5f63",
+            "linewidth": 2,
+        },
+        yaxis={
+            "title": y_title_map_2[y_col_2],
+            "title_font": {"size": 16, "color": "#FFFFFF", "weight": 700},
+            "tickfont": {"size": 13},
+            "showgrid": True,
+            "gridcolor": "#5f5f63",
+            "gridwidth": 1,
+            "showline": True,
+            "linecolor": "#5f5f63",
+            "linewidth": 2,
+        },
+        legend={
+            "font": {"size": 14},
+            "title": {
+                "text": "Alloy Complexity",
+                "font": {"size": 14, "color": "#FFFFFF"},
+            },
+        },
+        margin={"l": 80, "r": 30, "t": 40, "b": 40},
+        height=480,
     )
 
     # --------------------------------------------------
@@ -658,36 +671,10 @@ with col4:
         x=0,
         y=1.08,
         showarrow=False,
-        font=dict(size=12, color="#888888")
+        font={"size": 12, "color": "#888888"},
     )
 
     st.plotly_chart(fig4, width="stretch")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # =====================================================
@@ -753,7 +740,6 @@ else:
 data_root = os.path.join(os.getcwd(), "data")
 
 
-
 # Check subfolders
 expected_folders = ["contcar", "pdos", "tdos"]
 for folder in expected_folders:
@@ -768,6 +754,7 @@ def get_data_file_map(unique_id):
         "pdos": unique_id,
         "tdos": unique_id,
     }
+
 
 # ============================================================
 # Download helpers for filtered alloys
@@ -868,12 +855,22 @@ def render_filtered_alloys_grid(filtered_df):
             "Atom Count": st.column_config.NumberColumn(width="small"),
             "Structure (OVITO)": st.column_config.TextColumn(width="small"),
             "POTCAR Used": st.column_config.TextColumn(width="large"),
-            "Vol. per Atom": st.column_config.NumberColumn(format="%.3f", width="small"),
+            "Vol. per Atom": st.column_config.NumberColumn(
+                format="%.3f", width="small"
+            ),
             "DOS at Ef": st.column_config.NumberColumn(format="%.3f", width="small"),
-            "Bulk Modulus (GPa)": st.column_config.NumberColumn(format="%.3f", width="small"),
-            "Shear Modulus (GPa)": st.column_config.NumberColumn(format="%.3f", width="small"),
-            "Elastic Modulus (GPa)": st.column_config.NumberColumn(format="%.3f", width="small"),
-            "Poisson Ratio": st.column_config.NumberColumn(format="%.3f", width="small"),
+            "Bulk Modulus (GPa)": st.column_config.NumberColumn(
+                format="%.3f", width="small"
+            ),
+            "Shear Modulus (GPa)": st.column_config.NumberColumn(
+                format="%.3f", width="small"
+            ),
+            "Elastic Modulus (GPa)": st.column_config.NumberColumn(
+                format="%.3f", width="small"
+            ),
+            "Poisson Ratio": st.column_config.NumberColumn(
+                format="%.3f", width="small"
+            ),
             "Pugh Ratio": st.column_config.NumberColumn(format="%.3f", width="small"),
         },
     )
@@ -881,15 +878,22 @@ def render_filtered_alloys_grid(filtered_df):
     st.caption(f"Found {len(filtered_df)} results from the applied filters")
 
     selected_rows = dataframe_event.selection["rows"]
-    selected_table_df = table_df.iloc[selected_rows] if selected_rows else table_df.iloc[0:0]
+    selected_table_df = (
+        table_df.iloc[selected_rows] if selected_rows else table_df.iloc[0:0]
+    )
     selected_alloys = tuple(
-        (str(unique_ids.iloc[row_index]), str(selected_table_df.iloc[position]["Alloy"]))
+        (
+            str(unique_ids.iloc[row_index]),
+            str(selected_table_df.iloc[position]["Alloy"]),
+        )
         for position, row_index in enumerate(selected_rows)
     )
     selection_count = len(selected_alloys)
     selected_zip_name = "Selected_Alloy_Data.zip"
 
-    with st.container(horizontal=True, horizontal_alignment="left", vertical_alignment="center"):
+    with st.container(
+        horizontal=True, horizontal_alignment="left", vertical_alignment="center"
+    ):
         if st.button(
             "📊 Detailed Analysis",
             key="btn_details",

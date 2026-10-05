@@ -300,10 +300,15 @@ def render_lattice(neighbors):
     showmol(view, height=500, width=1100)
 
 
-st.title("Oxygen Vacancy Data")
+st.title("HEO Vacancy Data")
 st.caption(
-    "Explore an oxygen-centered octahedral environment and its neighbor composition."
+    'Select a high-entropy oxide system to compare oxygen-vacancy configurations, '
+    'formation energies, neighboring elements, and Bader charge values. Select a record '
+    'to explore its local oxygen environment and charts, or use Query using LLM to filter '
+    'vacancy records by system, neighbor elements, and numeric properties.'
 )
+if st.button("Query using LLM", icon=":material/neurology:", type="primary"):
+    st.switch_page("pages/research/heo-vacancy-data/llm.py")
 
 systems = get_oxygen_vacancy_systems()
 if not systems:

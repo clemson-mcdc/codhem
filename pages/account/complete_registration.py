@@ -11,7 +11,12 @@ from codhem.services.auth_service import (
 
 
 st.title("Complete Registration")
-st.caption("Finish creating your CODHEM profile.")
+st.caption(
+    'Provide your name, organization, country, and position to submit your access '
+    'request. Your email comes from your Google account. An administrator must verify '
+    'your registration before you can open the database, research dashboards, and model '
+    'pages.'
+)
 
 if not is_authenticated():
     st.switch_page("pages/account/sign_in.py")

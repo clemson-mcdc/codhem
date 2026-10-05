@@ -5,7 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "authlib>=1.7.0",
+    "authlib>=1.8.0",
     "ipython-genutils>=0.2.0",
     "openai>=2.41.1",
     "openpyxl>=3.1.5",

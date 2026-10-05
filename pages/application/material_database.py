@@ -11,7 +11,6 @@ from codhem.services.literature_data_service import (
     query_literature_data,
 )
 
-
 require_registered_user()
 
 PLOT_AXIS_OPTIONS = [
@@ -44,9 +43,12 @@ def classify_phase_bucket(value):
     return "Other"
 
 
-st.title("COD'HEM Database")
+st.title("Database")
 st.caption(
-    "Browse elements and use the periodic table as an entry point into the database."
+    'Explore published high-entropy material records. Select elements from the periodic '
+    'table, filter by phase, composition, and property ranges, then inspect matching '
+    'records and their DOI links. Use the plotting controls to compare two properties '
+    'within the selected phase.'
 )
 
 available_elements = get_literature_elements()
@@ -101,6 +103,7 @@ st.dataframe(
     width="stretch",
     hide_index=False,
     column_config={
+        "Unique ID": None,
         "DOI": st.column_config.LinkColumn(
             "DOI",
             display_text=r"https://doi\.org/(.*)",

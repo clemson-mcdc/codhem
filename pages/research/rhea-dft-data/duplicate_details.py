@@ -14,7 +14,6 @@ require_registered_user()
 # PAGE CONFIG
 # =====================================================
 st.set_page_config(
-    page_title="DFT CALCULATIONS DASHBOARD",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -38,8 +37,13 @@ st.markdown('<div class="composition-dashboard">', unsafe_allow_html=True)
 # =====================================================
 # TITLE
 # =====================================================
-st.title("⚛️ DFT Calculation Dashboard for High Entropy Alloys")
-st.caption("Compositional Space Coverage (Composition Only)")
+st.title("RHEA DFT Data Duplicate Details")
+st.caption(
+    'Explore how the selected alloy compositions cover composition space using ternary '
+    'plots, principal component analysis, parallel coordinates, and element-pair '
+    'projections. Use these views to compare composition families and identify areas of '
+    'dense or sparse coverage.'
+)
 
 # =====================================================
 # GET FILTERED DATA

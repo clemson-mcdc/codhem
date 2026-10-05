@@ -8,7 +8,6 @@ from codhem.services.dft_calculations_service import build_dft_calculations_dash
 require_registered_user()
 
 st.set_page_config(
-    page_title="Missing Elastic",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
@@ -24,8 +23,12 @@ def load_css():
 
 load_css()
 
-st.title("🧪 DFT Calculations Dashboard")
-st.caption("Structured database of Body-Centered Cubic (BCC) alloys")
+st.title("RHEA DFT Data Missing Elastic")
+st.caption(
+    'Review RHEA DFT records with incomplete elastic-property data to identify gaps in '
+    'calculation coverage. Inspect the available composition and property values, and '
+    'download this subset as CSV for follow-up analysis.'
+)
 st.header("⚠️ Only DOS Available")
 
 # =====================================================

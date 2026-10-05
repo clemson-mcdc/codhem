@@ -1,5 +1,9 @@
+import math
+import re
+
 import streamlit as st
 
+from codhem.components.periodic_table import ELEMENTS
 from codhem.db.client import DatabaseClient
 from codhem.models.oxygen_vacancy import (
     OxygenVacancyBaderData,
@@ -27,6 +31,24 @@ SYSTEM_ORDER = [
     "MgCoCuNiO",
     "MgCoCuNiZnO",
 ]
+ELEMENT_SYMBOLS = {element["symbol"] for element in ELEMENTS}
+HEO_SEARCH_LIMIT = 20
+HEO_NUMERIC_FIELDS = {
+    "defect_energy": "defect_energy",
+    "perfect_energy": "perfect_energy",
+    "oxygen_vacancy_energy": "oxygen_vacancy_energy",
+    "vacancy_formation_energy": "vacancy_formation_energy",
+    "bader_vacancy_nearest_neighbors": "bader.vacancy_nearest_neighbors",
+    "bader_total_per_atom": "bader.total_per_atom",
+    "bader_volume": "bader.volume",
+    "volume_vacancy": "volume.vacancy",
+    "volume_perfect": "volume.perfect",
+    "volume_difference": "volume.difference",
+    "volume_ratio": "volume.ratio",
+    "displacement_initial": "displacement.initial",
+    "displacement_final": "displacement.final",
+    "displacement_difference": "displacement.difference",
+}
 
 
 def _get_collection():
@@ -102,3 +124,150 @@ def get_average_vacancy_formation_energy(records):
         if record.vacancy_formation_energy is not None
     ]
     return sum(energies) / len(energies) if energies else None
+
+
+def _numeric_range(value):
+    if not isinstance(value, dict):
+        return {}
+
+    conditions = {}
+    for key, operator in (("lt", "$lt"), ("gt", "$gt"), ("eq", "$eq")):
+        number = value.get(key)
+        if not isinstance(number, int | float) or isinstance(number, bool):
+            continue
+        try:
+            if math.isfinite(number):
+                conditions[operator] = number
+        except OverflowError:
+            continue
+
+    return conditions
+
+
+def _build_heo_mongo_query(query):
+    if not isinstance(query, dict):
+        return {}
+
+    mongo_query = {}
+
+    system = query.get("system")
+    if isinstance(system, str) and system.strip():
+        mongo_query["system"] = {
+            "$regex": re.escape(system.strip()),
+            "$options": "i",
+        }
+
+    vacancy_position = query.get("vacancy_position")
+    if isinstance(vacancy_position, int) and not isinstance(vacancy_position, bool):
+        mongo_query["vacancy_position"] = vacancy_position
+
+    index = query.get("index")
+    if isinstance(index, int) and not isinstance(index, bool):
+        mongo_query["index"] = index
+
+    elements_present = query.get("elements_present", [])
+    if isinstance(elements_present, str):
+        elements_present = [elements_present]
+    if isinstance(elements_present, list):
+        for element in elements_present[:8]:
+            if not isinstance(element, str):
+                continue
+            symbol = element.strip().capitalize()
+            if symbol in ELEMENT_SYMBOLS:
+                mongo_query[f"neighbor_composition.{symbol}"] = {"$gt": 0}
+
+    bader_element = query.get("bader_element")
+    if isinstance(bader_element, str):
+        symbol = bader_element.strip().capitalize()
+        if symbol in ELEMENT_SYMBOLS:
+            for field_name, mongo_path in (
+                ("bader_by_element_value", "bader.by_element"),
+                ("bader_per_atom_value", "bader.per_atom"),
+            ):
+                conditions = _numeric_range(query.get(field_name))
+                if conditions:
+                    mongo_query[f"{mongo_path}.{symbol}"] = conditions
+
+    for field_name, mongo_field in HEO_NUMERIC_FIELDS.items():
+        conditions = _numeric_range(query.get(field_name))
+        if conditions:
+            mongo_query[mongo_field] = conditions
+
+    return mongo_query
+
+
+def _build_heo_search_result(document):
+    bader = document.get("bader")
+    volume = document.get("volume")
+    displacement = document.get("displacement")
+    bader = bader if isinstance(bader, dict) else {}
+    volume = volume if isinstance(volume, dict) else {}
+    displacement = displacement if isinstance(displacement, dict) else {}
+
+    return {
+        "system": document.get("system"),
+        "vacancy_position": document.get("vacancy_position"),
+        "index": document.get("index"),
+        "neighbor_composition": document.get("neighbor_composition"),
+        "defect_energy": document.get("defect_energy"),
+        "perfect_energy": document.get("perfect_energy"),
+        "oxygen_vacancy_energy": document.get("oxygen_vacancy_energy"),
+        "vacancy_formation_energy": document.get("vacancy_formation_energy"),
+        "bader": {
+            "vacancy_nearest_neighbors": bader.get("vacancy_nearest_neighbors"),
+            "by_element": bader.get("by_element"),
+            "per_atom": bader.get("per_atom"),
+            "total_per_atom": bader.get("total_per_atom"),
+            "volume": bader.get("volume"),
+        },
+        "volume": {
+            "vacancy": volume.get("vacancy"),
+            "perfect": volume.get("perfect"),
+            "difference": volume.get("difference"),
+            "ratio": volume.get("ratio"),
+        },
+        "displacement": {
+            "initial": displacement.get("initial"),
+            "final": displacement.get("final"),
+            "difference": displacement.get("difference"),
+        },
+    }
+
+
+def search_heo_vacancy_data(query: dict | None = None, limit: int = 20):
+    requested_limit = (
+        limit
+        if isinstance(limit, int) and not isinstance(limit, bool)
+        else HEO_SEARCH_LIMIT
+    )
+    result_limit = max(1, min(requested_limit, HEO_SEARCH_LIMIT))
+    projection = {
+        "_id": 0,
+        "system": 1,
+        "vacancy_position": 1,
+        "index": 1,
+        "neighbor_composition": 1,
+        "defect_energy": 1,
+        "perfect_energy": 1,
+        "oxygen_vacancy_energy": 1,
+        "vacancy_formation_energy": 1,
+        "bader.vacancy_nearest_neighbors": 1,
+        "bader.by_element": 1,
+        "bader.per_atom": 1,
+        "bader.total_per_atom": 1,
+        "bader.volume": 1,
+        "volume.vacancy": 1,
+        "volume.perfect": 1,
+        "volume.difference": 1,
+        "volume.ratio": 1,
+        "displacement.initial": 1,
+        "displacement.final": 1,
+        "displacement.difference": 1,
+    }
+    documents = (
+        _get_collection()
+        .find(_build_heo_mongo_query(query), projection)
+        .sort([("vacancy_formation_energy", -1), ("vacancy_position", 1)])
+        .limit(result_limit)
+    )
+    return [_build_heo_search_result(document) for document in documents]

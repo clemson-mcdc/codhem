@@ -5,28 +5,28 @@ from openai import OpenAI
 from codhem.config.settings import get_settings
 from codhem.services.dft_calculations_service import search_dft_calculations
 from codhem.services.literature_data_service import search_literature_data
-from codhem.services.llm_tools import TOOLS
+from codhem.services.oxygen_vacancy_service import (
+    HEO_SEARCH_LIMIT,
+    search_heo_vacancy_data,
+)
 from codhem.services.rhea_mpnn_service import run_rhea_mpnn_prediction
 
 RESPONSE_POLICY = (
     "Answer only what the user asks by default and do not add extra inferred "
     "information unless the user explicitly asks for it. Keep the tone formal. "
-    "Whenever you show data returned by a tool, explicitly state its source in "
-    "the same response every time: literature results are sourced from the "
-    "CODHEM literature database, DFT results are sourced from the DFT database, "
-    "and RHEA predictions are sourced from the RHEA MPNN model, etc. "
-    "For every database query, tell the user the limit used for that query. "
+    "Use only the tools provided for this chat. When you show data returned by "
+    "a tool, identify its source and the limit used for the query. "
     "Do not use emoji. Do not ask follow-up questions by default or add closing "
     "prompts such as asking whether the user wants more help."
 )
 
 
-def build_system_prompt(base_prompt: str):
+def build_system_prompt(base_prompt: str, page_instructions: str):
     normalized_base_prompt = base_prompt.strip()
     if not normalized_base_prompt:
         normalized_base_prompt = "You are MCDC LLM."
 
-    return f"{normalized_base_prompt} {RESPONSE_POLICY}"
+    return f"{normalized_base_prompt} {RESPONSE_POLICY} {page_instructions}"
 
 
 def _execute_tool_call(tool_call):
@@ -52,10 +52,21 @@ def _execute_tool_call(tool_call):
         )
         return json.dumps({"records": records}, default=str)
 
+    if tool_call.function.name == "search_heo_vacancy_data":
+        requested_limit = arguments.get("limit", HEO_SEARCH_LIMIT)
+        if not isinstance(requested_limit, int) or isinstance(requested_limit, bool):
+            requested_limit = HEO_SEARCH_LIMIT
+        result_limit = max(1, min(requested_limit, HEO_SEARCH_LIMIT))
+        records = search_heo_vacancy_data(
+            query=arguments.get("query", {}),
+            limit=result_limit,
+        )
+        return json.dumps({"records": records, "limit": result_limit}, default=str)
+
     raise RuntimeError(f"Unsupported tool call: {tool_call.function.name}")
 
 
-def generate_assistant_reply(messages):
+def generate_assistant_reply(messages, tools):
     llm_settings = get_settings().llm
     client = OpenAI(
         api_key=llm_settings.api_key,
@@ -68,7 +79,7 @@ def generate_assistant_reply(messages):
         response = client.chat.completions.create(
             model=llm_settings.model,
             messages=conversation,
-            tools=TOOLS,
+            tools=tools,
         )
         message = response.choices[0].message
 
@@ -80,6 +91,9 @@ def generate_assistant_reply(messages):
 
         conversation.append(message.model_dump(exclude_none=True))
         for tool_call in message.tool_calls:
+            allowed_tools = {tool["function"]["name"] for tool in tools}
+            if tool_call.function.name not in allowed_tools:
+                raise RuntimeError(f"Unsupported tool call: {tool_call.function.name}")
             tool_result = _execute_tool_call(tool_call)
             conversation.append(
                 {

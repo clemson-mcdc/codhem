@@ -8,8 +8,10 @@ from codhem.services.auth_service import require_registered_user
 
 MODEL_TITLE = "RHEA-DOS-E Predictor"
 MODEL_SUMMARY = (
-    "Predicts the electronic density of states at the Fermi level and Young's "
-    "modulus for refractory high-entropy alloys."
+    "Enter a refractory high-entropy alloy composition in atomic percent, such "
+    "as Cr20Mo30V10Hf40, and choose Run model to estimate electronic density of "
+    "states at the Fermi level and Young's modulus. Results appear below in "
+    "states/eV-atom and GPa, respectively."
 )
 MODEL_DESCRIPTION = (
     "RHEA-DOS-E Predictor estimates the electronic density of states at the "
@@ -84,7 +86,7 @@ st.caption(MODEL_SUMMARY)
 st.write(MODEL_DESCRIPTION)
 
 st.page_link(
-    "pages/ml_models/overview.py",
+    "pages/research/ml_models/overview.py",
     label="Back to model list",
     icon=":material/arrow_back:",
 )
